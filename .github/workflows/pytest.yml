@@ -64,8 +64,8 @@ jobs:
       uses: schneegans/dynamic-badges-action@v1.1.0
       with:
         auth: ${{ secrets.PYTEST_COVERAGE }}
-        gistID: ce7ccaf6aaa9faeeba83f9b61b5cfcd8
-        filename: badge-dfm-pytest-coverage.json
+        gistID: cc9768cea530d1cb9b339f022964fdb4
+        filename: badge-conspiracies-coverage.json
         label: Coverage
         message: ${{ steps.coverage-comment.outputs.coverage }}
         color: ${{ steps.coverage-comment.outputs.color }}
