@@ -15,7 +15,28 @@ Discovering and examining conspiracies using NLP.
 ## 🔧 Installation
 Installation is simply using pip simply run:
 ```
-pip install -e .
+pip install conspiracies
+```
+
+
+## 👩‍💻 Usage
+
+### Coreference model
+A small use case of the coreference component in spaCy.
+
+```
+import spacy
+from conspiracies.coref import CoreferenceComponent 
+
+nlp = spacy.load("en_core_web_sm")
+nlp.add_pipe("allennlp_coref")
+doc = nlp("Do you see Julie over there? She is really into programming!")
+
+assert isinstance(doc._.coref_chains, list)
+
+for sent in doc.sents:
+    assert isinstance(sent._.coref_chains, list)
+    assert isinstance(sent._.coref_chains[0], spacy.tokens.Span)
 ```
 
 ## FAQ
