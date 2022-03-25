@@ -1,1 +1,2 @@
-from .corefpredictor import CoreferenceModel
+from .CoreferenceModel import CoreferenceModel
+from .component import CoreferenceComponent
