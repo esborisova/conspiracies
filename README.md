@@ -13,14 +13,30 @@ Discovering and examining conspiracies using NLP.
 
 
 ## 🔧 Installation
-
+Installation is simply using pip simply run:
 ```
 pip install -e .
 ```
 
-## Running tests
+## FAQ
 
-WIP
+### How do I run the tests?
+To run the test, you will need to install the package in editable model. This is
+intentional as this ensures that you always run the package installation before running
+the tests, which ensures that the installation process works as intended.
+
+To run the test you can use the following code:
+```
+# download repo
+git clone https://github.com/centre-for-humanities-computing/conspiracies
+cd conspiracies
+
+# install package
+pip install --editable .
+
+# run tests
+python -m  pytest
+```
 
 ## Contact
 Please use the [GitHub Issue Tracker](https://github.com/centre-for-humanities-computing/conspiracies/issues) to contact us on this project.
