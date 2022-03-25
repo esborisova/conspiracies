@@ -1,4 +1,14 @@
+# package
+spacy>=3.1.0,<3.3.0
 allennlp
 allennlp_models
 spacy
 jsonlines
+
+# style
+black==22.1.0
+
+# testing
+pytest>=6.2.5
+pytest-lazy-fixture>=0.6.3
+pytest-cov>=2.8.1
