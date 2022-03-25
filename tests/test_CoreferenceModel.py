@@ -1,9 +1,13 @@
 import spacy
+from spacy.tokens import Doc
+
 from conspiracies.coref.CoreferenceModel import CoreferenceModel
 
 
 def test_CoreferenceModel():
-    model = CoreferenceModel()
+    model = CoreferenceModel()  # check that the model loads as intended
+
+    
     nlp = spacy.load("da_core_news_sm")
     text = [
         "Hej Kenneth, har du en fed teksts vi kan skrive om dig?",
@@ -11,4 +15,8 @@ def test_CoreferenceModel():
     ]
     docs = nlp.pipe(text)
 
-    out = model.predict_batch_docs(docs)
+    outputs = model.predict_batch_docs(docs)
+
+    for output in outputs:
+        assert isinstance(output, dict)
+
