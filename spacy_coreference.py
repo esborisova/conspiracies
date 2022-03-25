@@ -1,29 +1,16 @@
-#!/usr/bin/env python
-# coding: utf-8
-from email.policy import default
-from typing import Callable, Dict, Iterable, Iterator, List
+from typing import , Dict, Iterable, Iterator, List
 
 import spacy
+from allennlp.models.archival import load_archive
+from allennlp_models.coref.predictors.coref import CorefPredictor
 from spacy import Vocab
 from spacy.language import Language
 from spacy.pipeline import TrainablePipe
-from spacy.tokens import Doc
+from spacy.tokens import Doc, Span
 from spacy.util import minibatch
-from spacy_transformers.align import get_alignment
-from transformers import AutoTokenizer
 
 from src.coref import CoreferenceModel
 
-import os
-import glob
-import spacy
-import json
-import jsonlines
-from spacy.tokens import Doc, Span
-from spacy.language import Language
-from allennlp.models.archival import load_archive
-from allennlp_models.coref.predictors.coref import CorefPredictor
-from allennlp.common.util import import_module_and_submodules, prepare_environment
 
 # Give a path to the model directory
 def load_custom_predictor(
@@ -154,20 +141,19 @@ class CoreferenceExtension(TrainablePipe):
         return self.model.predict_batch_docs(docs)
 
 
-# Add the component to the pipeline and configure it
-nlp = spacy.load("da_core_news_trf")
-nlp.add_pipe("Allennlp_coref")
+if __name__ == "__main__":
+    # Add the component to the pipeline and configure it
+    nlp = spacy.load("da_core_news_trf")
+    nlp.add_pipe("Allennlp_coref")
 
-text = "Aftalepartierne bag Rammeaftalen om plan for genåbning af Danmark blev i foråret 2021 enige om at nedsætte en ekspertgruppe, der fik til opgave at komme med input til den langsigtede strategi for håndtering af coronaepidemien i Danmark. Ekspertgruppen er nu klar med sin rapport."
-# text = "Lasse er en sød fyr. Han bor i Aarhus"
+    text = "Aftalepartierne bag Rammeaftalen om plan for genåbning af Danmark blev i foråret 2021 enige om at nedsætte en ekspertgruppe, der fik til opgave at komme med input til den langsigtede strategi for håndtering af coronaepidemien i Danmark. Ekspertgruppen er nu klar med sin rapport."
+    # text = "Lasse er en sød fyr. Han bor i Aarhus"
 
-print(text)
-print("\n")
-doc = nlp(text)
-doc._.coref_chains
-for sent in doc.sents:
-    print(sent)
-    print(sent._.coref_chains)
+    print(text)
+    print("\n")
+    doc = nlp(text)
+    doc._.coref_chains
+    for sent in doc.sents:
+        print(sent)
+        print(sent._.coref_chains)
 
-
-## Read
