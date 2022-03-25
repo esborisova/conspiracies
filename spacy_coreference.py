@@ -1,4 +1,4 @@
-from typing import , Dict, Iterable, Iterator, List
+from typing import Dict, Iterable, Iterator, List
 
 import spacy
 from allennlp.models.archival import load_archive
@@ -156,4 +156,3 @@ if __name__ == "__main__":
     for sent in doc.sents:
         print(sent)
         print(sent._.coref_chains)
-
