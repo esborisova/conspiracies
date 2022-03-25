@@ -1,0 +1,4 @@
+allennlp
+allennlp_models
+spacy
+jsonlines

@@ -1,0 +1,1 @@
+from .corefpredictor import CoreferenceModel
