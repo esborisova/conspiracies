@@ -41,7 +41,6 @@ class CoreferenceModel(Predictor):
         if model_path is None:
             model_path = download_model("da_coref_twitter_v1")
 
-
         archive = load_archive(model_path, cuda_device=device, **kwargs)
         config = archive.config
         prepare_environment(config)
