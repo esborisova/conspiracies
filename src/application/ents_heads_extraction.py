@@ -1,6 +1,7 @@
 from relationextraction import SpacyRelationExtractor
 import spacy
 from collections import Counter
+sys.path.append("../conspiracies/extract_ents_heads")
 from functions import*
 
 nlp = spacy.load("da_core_news_lg")
