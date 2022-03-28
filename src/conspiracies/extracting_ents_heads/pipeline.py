@@ -49,4 +49,4 @@ filtered_freq = filter_ne_type(merged_freq)
 ranked_freq = {key: value for key, value in sorted(filtered_freq.items(), key=lambda item: item[1],reverse=True)}
 
 #Create a list of tuples with ents/heads, type tag, freq 
-ents_tuples = make_tuples(ranked_freq)
+ents_tuples = create_tuples(ranked_freq)
