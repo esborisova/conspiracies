@@ -1,6 +1,5 @@
 import spacy
 from collections import Counter
-import pandas as pd
 
 
 def get_headword(noun_phrases: list) -> list:
