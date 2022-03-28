@@ -1,7 +1,6 @@
 from relationextraction import SpacyRelationExtractor
 import spacy
 from collections import Counter
-import pandas as pd
 from functions import*
 
 nlp = spacy.load("da_core_news_lg")
