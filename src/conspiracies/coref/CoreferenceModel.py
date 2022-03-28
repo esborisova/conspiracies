@@ -22,7 +22,7 @@ from conspiracies.download import download_model
 @Predictor.register("coreference_resolution_v1")
 class CoreferenceModel(Predictor):
     """
-    A coreference predictor model using the AllenNLP API, but for handing SpaCy docs
+    A coreference predictor model using the AllenNLP API, but for handling SpaCy docs
 
     Args:
         model_path(Union[Path, str, None], optional): Path to the model, if None, the
