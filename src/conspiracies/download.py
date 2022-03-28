@@ -14,8 +14,8 @@ from wasabi import msg
 
 MODEL_URLS = {
     "da_coref_twitter_v1": {
-        "url": "https://sciencedata.dk/shared/3d0b045fcae482ff997b7ff6243361d1?download",
-        "folder_name": "conlldata_danish_twitter_lr1_lr1",
+        "url": "https://sciencedata.dk/shared/f20703362e0a771f004f8ff2026afb0f?download",
+        "folder_name": "da_coref_twitter_v1",
     }
 }
 DEFAULT_CACHE_DIR = os.getenv(
