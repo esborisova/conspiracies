@@ -1,7 +1,8 @@
 from relationextraction import SpacyRelationExtractor
 import spacy
 from collections import Counter
-from ..src.conspiracies.extracting_ents_heads.functions import*
+sys.path.append("../src/conspiracies/extract_ents_heads")
+from functions import*
 import pytest
 
 
