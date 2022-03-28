@@ -13,7 +13,7 @@ Discovering and examining conspiracies using NLP.
 
 
 ## 🔧 Installation
-Installation is simply using pip simply run:
+Installation using pip:
 ```
 pip install conspiracies
 ```
