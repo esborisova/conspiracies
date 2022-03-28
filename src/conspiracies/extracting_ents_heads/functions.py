@@ -59,17 +59,17 @@ def filter_ne_type(ents_heads: dict) -> dict:
 
 
 
-def make_tuples(ranked_ents_heads: dict) -> list:
+def make_tuples(ents_heads: dict) -> list:
   """Creates a list of tuples with: Entity/headword, its named entity type, its frequency
    Args:
-       ranked_ents_heads (dict): A dictionary with entities/headwords as keys and their frequencies as values 
+       ents_heads (dict): A dictionary with entities/headwords as keys and their frequencies as values 
    Returns:
        list_of_tuples (list): A list of tuples containing entities/headwords, their entity type label and frequency 
   """ 
   
   list_of_tuples = []
   
-  for key, value in ranked_ents_heads.items():
+  for key, value in ents_heads.items():
     splitted_key = key.split("%%")
     splitted_key.append(value)
     list_of_tuples.append(tuple(splitted_key))
