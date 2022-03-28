@@ -16,9 +16,6 @@ test_sents = [
     "En av Belgiens mest framträdande virusexperter har flyttats med sin familj till skyddat boende efter hot från en beväpnad högerextremist.",
 ]
 
-
-# change these to your purposes. 2.7 is the default confidence threshold(the bulk of bad relations not kept and the majority of correct ones kept)
-# batch_size should be changed according to your device. Can most likely be bumped up a fair bit
 config = {"confidence_threshold": 2.7, "model_args": {"batch_size": 10}}
 nlp.add_pipe("relation_extractor", config=config)
 
@@ -32,36 +29,26 @@ for d in pipe:
   args.append(d._.relation_head)
   args.append(d._.relation_tail)
 
-print(args)
-
 #Extract all headwords and their entaty lables from args 
 heads = get_headword(args)
-print(heads)
 
 #Count heads frequency
 heads_freq = Counter(heads)
-print(heads_freq)
 
 #Extract all entaties and their labels from args
 entities = get_entities(args)
-print(entities)
 
 #Count entaties frequency
 entities_freq = Counter(entities)
-print(entities_freq)
 
 #Sum frequencies across heads and entaties
 merged_freq = {k: heads_freq.get(k, 0) + entities_freq.get(k, 0) for k in set(heads_freq) | set(entities_freq)}
-print(merged_freq)
 
 #Filter out enataty types 
 filtered_freq = filter_ne_type(merged_freq)
-print(filtered_freq)
 
 #Rank entaties/heads by frequency 
 ranked_freq = {key: value for key, value in sorted(filtered_freq.items(), key=lambda item: item[1],reverse=True)}
-print(ranked_freq)
 
 #Create a list of tuples with ents/heads, type tag, freq 
 ents_tuples = make_tuples(ranked_freq)
-print(ents_tuples)
