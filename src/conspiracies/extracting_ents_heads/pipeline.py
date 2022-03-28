@@ -29,25 +29,25 @@ for d in pipe:
   args.append(d._.relation_head)
   args.append(d._.relation_tail)
 
-#Extract all headwords and their entaty lables from args 
+#Extract all headwords and their entity lables from args 
 heads = get_headword(args)
 
 #Count heads frequency
 heads_freq = Counter(heads)
 
-#Extract all entaties and their labels from args
+#Extract all entities and their labels from args
 entities = get_entities(args)
 
-#Count entaties frequency
+#Count entities frequency
 entities_freq = Counter(entities)
 
-#Sum frequencies across heads and entaties
+#Sum frequencies across heads and entities
 merged_freq = {k: heads_freq.get(k, 0) + entities_freq.get(k, 0) for k in set(heads_freq) | set(entities_freq)}
 
-#Filter out enataty types 
+#Filter out entity types 
 filtered_freq = filter_ne_type(merged_freq)
 
-#Rank entaties/heads by frequency 
+#Rank entities/heads by frequency 
 ranked_freq = {key: value for key, value in sorted(filtered_freq.items(), key=lambda item: item[1],reverse=True)}
 
 #Create a list of tuples with ents/heads, type tag, freq 
