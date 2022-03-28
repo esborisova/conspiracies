@@ -1,7 +1,6 @@
 from relationextraction import SpacyRelationExtractor
 import spacy
 from collections import Counter
-import pandas as pd
 from functions import*
 import pytest
 
@@ -43,4 +42,4 @@ def test_tuples_creator():
 
     ent_dict = {'23,97%%MISC': 1}
 
-    assert make_tuples(ent_dict) == [('23,97', 'MISC', 1)]
+    assert create_tuples(ent_dict) == [('23,97', 'MISC', 1)]
