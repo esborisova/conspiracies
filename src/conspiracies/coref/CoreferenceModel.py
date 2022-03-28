@@ -41,10 +41,6 @@ class CoreferenceModel(Predictor):
         if model_path is None:
             model_path = download_model("da_coref_twitter_v1")
 
-        # TODO remove this hotfix
-        import os
-
-        model_path = os.path.join(model_path, "ser_folder")
 
         archive = load_archive(model_path, cuda_device=device, **kwargs)
         config = archive.config
