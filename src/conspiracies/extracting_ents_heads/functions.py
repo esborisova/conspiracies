@@ -26,7 +26,7 @@ def get_entities(noun_phrases: list) -> list:
    Args:
        noun_phrases (list): A list of lists with strings (noun phrases) 
    Returns:
-       entaties (list): A list of strings containing entities and their types
+       entities (list): A list of strings containing entities and their types
   """ 
 
   entities = []
