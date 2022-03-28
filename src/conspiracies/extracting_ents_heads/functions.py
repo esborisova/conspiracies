@@ -59,7 +59,7 @@ def filter_ne_type(ents_heads: dict) -> dict:
 
 
 
-def make_tuples(ents_heads: dict) -> list:
+def create_tuples(ents_heads: dict) -> list:
   """Creates a list of tuples with: Entity/headword, its named entity type, its frequency
    Args:
        ents_heads (dict): A dictionary with entities/headwords as keys and their frequencies as values 
