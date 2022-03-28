@@ -18,6 +18,8 @@ Installation using pip:
 pip install conspiracies
 ```
 
+Note that this package is dependent on AllenNLP and thus does not support Windows.
+
 
 ## 👩‍💻 Usage
 
