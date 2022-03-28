@@ -44,24 +44,3 @@ def test_tuples_creator():
     ent_dict = {'23,97%%MISC': 1}
 
     assert make_tuples(ent_dict) == [('23,97', 'MISC', 1)]
-
-
-
-
-
-
-
-
-   
-
-                
-    
- 
-
-
-
-
-
- 
-     
-
