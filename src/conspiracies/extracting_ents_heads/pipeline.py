@@ -20,11 +20,10 @@ nlp.add_pipe("relation_extractor", config=config)
 
 pipe = nlp.pipe(test_sents)
 
+#Collect all args1 and args2 
 args = []
 
-#Collect all args1 and args2 
 for d in pipe:
-
   args.append(d._.relation_head)
   args.append(d._.relation_tail)
 
