@@ -6,7 +6,7 @@ named entity labels from a spacy span.
 
 import spacy
 from collections import Counter
-from typing import List
+from typing import List, Dict
 
 
 def get_headword(noun_phrases: List[list], pos_to_keep: List[str]) -> List[str]:
@@ -47,7 +47,7 @@ def get_entities(noun_phrases: List[str]) -> List[str]:
     return entities
 
 
-def filter_ne_type(ents_heads: dict, ents_to_keep: List[str]) -> dict:
+def filter_ne_type(ents_heads: Dict[str, int], ents_to_keep: List[str]) -> Dict[str, int]:
     """Narrows down entities/headwords to the predifiend list of named entity types
     Args:
         ents_heads (dict): A dictionary with entities/headwords as keys and their frequencies as values
@@ -66,7 +66,7 @@ def filter_ne_type(ents_heads: dict, ents_to_keep: List[str]) -> dict:
     return new_dict
 
 
-def create_tuples(ents_heads: dict) -> List[tuple]:
+def create_tuples(ents_heads: Dict[str, int]) -> List[tuple]:
     """Creates a list of tuples with: Entity/headword, its named entity type, its frequency
     Args:
         ents_heads (dict): A dictionary with entities/headwords as keys and their frequencies as values
