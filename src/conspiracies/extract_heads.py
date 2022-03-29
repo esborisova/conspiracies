@@ -1,3 +1,9 @@
+""" 
+Functions for extracting entities and headwords along with their 
+named entity labels from a spacy span. 
+
+"""
+
 import spacy
 from collections import Counter
 from typing import List
