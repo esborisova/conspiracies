@@ -3,11 +3,13 @@ from collections import Counter
 from typing import List
 
 
-def get_headword(noun_phrases: List[str],
+def get_headword(noun_phrases: List[list],
                  pos_to_keep: List[str]) -> List[str]:
   """Extracts headwords with their entity labels from noun phrases
    Args:
-       noun_phrases (list): A list of lists with strings (noun phrases) 
+       noun_phrases (List[list]): A list of lists with strings (noun phrases) 
+       pos_to_keep (List[str]): A list with part of speech tags 
+
    Returns:
        List[str]: A list of strings containing headwords and their entity types
   """ 
@@ -26,7 +28,8 @@ def get_headword(noun_phrases: List[str],
 def get_entities(noun_phrases: List[str]) -> List[str]:
   """Extracts entities with their named entity labels from noun phrases
    Args:
-       noun_phrases (list): A list of lists with strings (noun phrases) 
+       noun_phrases (List[str]): A list of lists with strings (noun phrases) 
+    
    Returns:
        List[str]: A list of strings containing entities and their types
   """ 
@@ -46,6 +49,8 @@ def filter_ne_type(ents_heads: dict,
   """Narrows down entities/headwords to the predifiend list of named entity types
    Args:
        ents_heads (dict): A dictionary with entities/headwords as keys and their frequencies as values 
+       ents_to_keep (List[str]): A list with named entity lables
+
    Returns:
        dict: A dictionary containing only entities/headwords (and their freq) belonging to the defined group of entity types 
   """ 
