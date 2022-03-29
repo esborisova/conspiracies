@@ -69,6 +69,7 @@ def create_tuples(ents_heads: dict) -> List[tuple]:
   """Creates a list of tuples with: Entity/headword, its named entity type, its frequency
    Args:
        ents_heads (dict): A dictionary with entities/headwords as keys and their frequencies as values 
+       
    Returns:
        List[tuple]: A list of tuples containing entities/headwords, their entity type label and frequency 
   """ 
