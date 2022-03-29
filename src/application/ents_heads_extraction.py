@@ -1,7 +1,6 @@
 from relationextraction import SpacyRelationExtractor
 import spacy
 from collections import Counter
-import sys
 from extract_heads import get_headword, get_entities, filter_ne_type, create_tuples 
 
 nlp = spacy.load("da_core_news_lg")
