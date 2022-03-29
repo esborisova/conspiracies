@@ -2,8 +2,7 @@ from relationextraction import SpacyRelationExtractor
 import spacy
 from collections import Counter
 import sys
-sys.path.append("../src/conspiracies/extract_ents_heads")
-from functions import*
+from extract_heads import get_headword, get_entities, filter_ne_type, create_tuples
 import pytest
 
 
@@ -26,7 +25,7 @@ def test_heads_ents_extractor():
         args.append(d._.relation_head)
         args.append(d._.relation_tail)
     
-    assert get_headword(args) == ['sekunder%%', 'sekunder%%']
+    assert get_headword(args, pos_to_keep = ['PROPN', 'NOUN', 'PRON']) == ['sekunder%%', 'sekunder%%']
 
     assert get_entities(args) == ['23,97%%MISC'] 
 
@@ -36,7 +35,7 @@ def test_ne_filter():
 
     ent_dict = {'sekunder%%': 2, '23,97%%MISC': 1}
 
-    assert filter_ne_type(ent_dict) == {'23,97%%MISC': 1}
+    assert filter_ne_type(ent_dict, ents_to_keep = ['LOC', 'MISC', 'ORG', 'PER']) == {'23,97%%MISC': 1}
 
 
 

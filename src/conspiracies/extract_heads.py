@@ -1,13 +1,15 @@
 import spacy
 from collections import Counter
+from typing import List
 
 
-def get_headword(noun_phrases: list) -> list:
+def get_headword(noun_phrases: List[str],
+                 pos_to_keep: List[str]) -> List[str]:
   """Extracts headwords with their entity labels from noun phrases
    Args:
        noun_phrases (list): A list of lists with strings (noun phrases) 
    Returns:
-       headwords (list): A list of strings containing headwords and their entity types
+       List[str]: A list of strings containing headwords and their entity types
   """ 
 
   headwords = []
@@ -15,18 +17,18 @@ def get_headword(noun_phrases: list) -> list:
   for phrase in noun_phrases:
     for span in phrase:
       for word in span:
-        if word.head.pos_ == "PROPN" or word.head.pos_ == "NOUN" or word.head.pos_ == "PRON":
+        if word.head.pos_ in pos_to_keep:
           headwords.append(f"{word.head}%%{word.head.ent_type_}") 
   return headwords
           
 
 
-def get_entities(noun_phrases: list) -> list:
+def get_entities(noun_phrases: List[str]) -> List[str]:
   """Extracts entities with their named entity labels from noun phrases
    Args:
        noun_phrases (list): A list of lists with strings (noun phrases) 
    Returns:
-       entities (list): A list of strings containing entities and their types
+       List[str]: A list of strings containing entities and their types
   """ 
 
   entities = []
@@ -39,19 +41,18 @@ def get_entities(noun_phrases: list) -> list:
 
 
 
-def filter_ne_type(ents_heads: dict) -> dict:
+def filter_ne_type(ents_heads: dict,
+                   ents_to_keep: List[str]) -> dict:
   """Narrows down entities/headwords to the predifiend list of named entity types
    Args:
        ents_heads (dict): A dictionary with entities/headwords as keys and their frequencies as values 
    Returns:
-       new_dict (list): A dictionary containing only entities/headwords (and their freq) belonging to the defined group of entity types 
+       dict: A dictionary containing only entities/headwords (and their freq) belonging to the defined group of entity types 
   """ 
-
-  ent_types = ['LOC', 'MISC', 'ORG', 'PER']
 
   new_dict = {}  
   
-  for tag in ent_types:
+  for tag in ents_to_keep:
     for key, value in ents_heads.items():
       if tag in key:
         new_dict[key] = value
@@ -59,12 +60,12 @@ def filter_ne_type(ents_heads: dict) -> dict:
 
 
 
-def create_tuples(ents_heads: dict) -> list:
+def create_tuples(ents_heads: dict) -> List[tuple]:
   """Creates a list of tuples with: Entity/headword, its named entity type, its frequency
    Args:
        ents_heads (dict): A dictionary with entities/headwords as keys and their frequencies as values 
    Returns:
-       list_of_tuples (list): A list of tuples containing entities/headwords, their entity type label and frequency 
+       List[tuple]: A list of tuples containing entities/headwords, their entity type label and frequency 
   """ 
   
   list_of_tuples = []

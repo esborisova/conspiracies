@@ -2,8 +2,7 @@ from relationextraction import SpacyRelationExtractor
 import spacy
 from collections import Counter
 import sys
-sys.path.append("../conspiracies/extract_ents_heads")
-from functions import*
+from extract_heads import get_headword, get_entities, filter_ne_type, create_tuples 
 
 nlp = spacy.load("da_core_news_lg")
 
@@ -30,7 +29,8 @@ for d in pipe:
   args.append(d._.relation_tail)
 
 #Extract all headwords and their entity lables from args 
-heads = get_headword(args)
+heads = get_headword(noun_phrases = args, 
+                     pos_to_keep = ['PROPN', 'NOUN', 'PRON'])
 
 #Count heads frequency
 heads_freq = Counter(heads)
@@ -45,7 +45,8 @@ entities_freq = Counter(entities)
 merged_freq = {k: heads_freq.get(k, 0) + entities_freq.get(k, 0) for k in set(heads_freq) | set(entities_freq)}
 
 #Filter out entity types 
-filtered_freq = filter_ne_type(merged_freq)
+filtered_freq = filter_ne_type(ents_heads = merged_freq,
+                               ents_to_keep = ['LOC', 'MISC', 'ORG', 'PER'])
 
 #Rank entities/heads by frequency 
 ranked_freq = {key: value for key, value in sorted(filtered_freq.items(), key=lambda item: item[1],reverse=True)}
