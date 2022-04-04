@@ -1,85 +1,75 @@
-""" 
-Functions for extracting entities and headwords along with their 
-named entity labels from a spacy span. 
-
-"""
-
 import spacy
+from spacy.tokens import Span, Token
 from collections import Counter
-from typing import List, Dict
 
 
-def get_headword(noun_phrases: List[list], pos_to_keep: List[str]) -> List[str]:
-    """Extracts headwords with their entity labels from noun phrases
+def normalize_token_to_span(token: Token) -> Span:
+    """
+    Normalize token to a span. If the token is an entity return the entity.
+
     Args:
-        noun_phrases (List[list]): A list of lists with strings (noun phrases)
-        pos_to_keep (List[str]): A list with part of speech tags
+        token(Token): The token to normalize.
 
     Returns:
-        List[str]: A list of strings containing headwords and their entity types
+        Span: The normalized token.
     """
-
-    headwords = []
-
-    for phrase in noun_phrases:
-        for span in phrase:
-            for word in span:
-                if word.head.pos_ in pos_to_keep:
-                    headwords.append(f"{word.head}%%{word.head.ent_type_}")
-    return headwords
+    
+    doc = token.doc
+    
+    return doc[token.i:token.i + 1]
 
 
-def get_entities(noun_phrases: List[str]) -> List[str]:
-    """Extracts entities with their named entity labels from noun phrases
+def most_common_ancestor(span: Span) -> Span:
+    """
+    Find the most common ancestor in a span.
+
     Args:
-        noun_phrases (List[str]): A list of lists with strings (noun phrases)
+        span(Span): The span to find the most common ancestor of.
 
     Returns:
-        List[str]: A list of strings containing entities and their types
+        Span: The most common ancestor of the span.
     """
+    ancestors_in_span = Counter([ancestor for token in span for ancestor
+                                 in token.ancestors if ancestor in span])
+    most_common_ancestor = ancestors_in_span.most_common()[0][0]
 
-    entities = []
+    normalized_token = normalize_token_to_span(most_common_ancestor)
+ 
+    #Check that a span contains a single token 
+    if len(normalized_token) !=1:
+      raise ValueError 
+    else:
+      return normalized_token 
 
-    for phrase in noun_phrases:
-        for span in phrase:
-            if span.ents:
-                entities.append(f"{span.ents[0]}%%{span.ents[0][0].ent_type_}")
-    return entities
 
 
-def filter_ne_type(ents_heads: Dict[str, int], ents_to_keep: List[str]) -> Dict[str, int]:
-    """Narrows down entities/headwords to the predifiend list of named entity types
+def extract_entities(span: Span) -> Span:
+    """
+    Find an entity in a span.
+    
     Args:
-        ents_heads (dict): A dictionary with entities/headwords as keys and their frequencies as values
-        ents_to_keep (List[str]): A list with named entity lables
-
+        span (Span): The span to find an entity in.
+    
     Returns:
-        dict: A dictionary containing only entities/headwords (and their freq) belonging to the defined group of entity types
+        Span: An entity extracted from the span.
     """
 
-    new_dict = {}
-
-    for tag in ents_to_keep:
-        for key, value in ents_heads.items():
-            if tag in key:
-                new_dict[key] = value
-    return new_dict
+    if span.ents:
+      return span.ents[0]
 
 
-def create_tuples(ents_heads: Dict[str, int]) -> List[tuple]:
-    """Creates a list of tuples with: Entity/headword, its named entity type, its frequency
+def contains_ents(span: Span) -> bool:
+  """
+    Check if a token is an entity.
+    
     Args:
-        ents_heads (dict): A dictionary with entities/headwords as keys and their frequencies as values
-
+        span (Span): The span with a token.
+    
     Returns:
-        List[tuple]: A list of tuples containing entities/headwords, their entity type label and frequency
+        bool: If a token is an entity returns True.
     """
-
-    list_of_tuples = []
-
-    for key, value in ents_heads.items():
-        splitted_key = key.split("%%")
-        splitted_key.append(value)
-        list_of_tuples.append(tuple(splitted_key))
-
-    return list_of_tuples
+    
+  if span[0].ent_type_:
+    return True
+  else:
+    return False 
