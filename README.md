@@ -14,20 +14,19 @@ Discovering and examining conspiracies using NLP.
 
 ## 🔧 Installation
 Installation using pip:
-```
+```bash
 pip install pip --upgrade
 pip install conspiracies
 ```
 
 Note that this package is dependent on AllenNLP and thus does not support Windows.
 
-
 ## 👩‍💻 Usage
 
 ### Coreference model
 A small use case of the coreference component in spaCy.
 
-```
+```python
 import spacy
 from conspiracies.coref import CoreferenceComponent 
 
