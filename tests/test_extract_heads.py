@@ -42,9 +42,8 @@ def test_headword():
         levels=[Span],
     )
 
-    for d in pipe:
-        for span in d._.relation_head:
-            headword = span._.most_common_ancestor
+    for span in doc._.relation_head:
+        headword = span._.most_common_ancestor
 
-            assert isinstance(headword, Span)
-            assert headword.text == "Frederiksen"
+        assert isinstance(headword, Span)
+        assert headword.text == "Frederiksen"
