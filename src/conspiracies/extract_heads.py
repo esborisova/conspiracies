@@ -13,10 +13,10 @@ def normalize_token_to_span(token: Token) -> Span:
     Returns:
         Span: The normalized token.
     """
-    
+
     doc = token.doc
-    
-    return doc[token.i:token.i + 1]
+
+    return doc[token.i : token.i + 1]
 
 
 def most_common_ancestor(span: Span) -> Span:
@@ -29,18 +29,18 @@ def most_common_ancestor(span: Span) -> Span:
     Returns:
         Span: The most common ancestor of the span.
     """
-    ancestors_in_span = Counter([ancestor for token in span for ancestor
-                                 in token.ancestors if ancestor in span])
+    ancestors_in_span = Counter(
+        [ancestor for token in span for ancestor in token.ancestors if ancestor in span]
+    )
     most_common_ancestor = ancestors_in_span.most_common()[0][0]
 
     normalized_token = normalize_token_to_span(most_common_ancestor)
- 
-    #Check that a span contains a single token 
-    if len(normalized_token) !=1:
-      raise ValueError 
-    else:
-      return normalized_token 
 
+    # Check that a span contains a single token
+    if len(normalized_token) != 1:
+        raise ValueError
+    else:
+        return normalized_token
 
 
 def extract_entities(span: Span) -> Span:
@@ -55,11 +55,11 @@ def extract_entities(span: Span) -> Span:
     """
 
     if span.ents:
-      return span.ents[0]
+        return span.ents[0]
 
 
 def contains_ents(span: Span) -> bool:
-  """
+    """
     Check if a token is an entity.
     
     Args:
@@ -68,8 +68,8 @@ def contains_ents(span: Span) -> bool:
     Returns:
         bool: If a token is an entity returns True.
     """
-    
-  if span[0].ent_type_:
-    return True
-  else:
-    return False 
+
+    if span[0].ent_type_:
+        return True
+    else:
+        return False
