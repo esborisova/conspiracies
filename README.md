@@ -15,6 +15,7 @@ Discovering and examining conspiracies using NLP.
 ## 🔧 Installation
 Installation using pip:
 ```
+pip install pip --upgrade
 pip install conspiracies
 ```
 
