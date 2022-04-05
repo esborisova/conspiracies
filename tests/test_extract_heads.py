@@ -34,7 +34,7 @@ def test_headword():
     config = {"confidence_threshold": 2.7, "model_args": {"batch_size": 10}}
     nlp.add_pipe("relation_extractor", config=config)
 
-    pipe = nlp.pipe(test_sents)
+    doc = nlp(text)
 
     set_extensions(
         extention_name="most_common_ancestor",
