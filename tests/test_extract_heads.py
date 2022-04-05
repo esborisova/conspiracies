@@ -29,7 +29,7 @@ def test_normalize_token():
 def test_headword():
 
     nlp = spacy.load("en_core_web_lg")
-    test_sents = ["Mette Frederiksen is the Danish politician."]
+    text = "Mette Frederiksen is the Danish politician."
 
     config = {"confidence_threshold": 2.7, "model_args": {"batch_size": 10}}
     nlp.add_pipe("relation_extractor", config=config)
