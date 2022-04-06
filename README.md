@@ -17,6 +17,7 @@ Installation using pip:
 ```bash
 pip install pip --upgrade
 pip install conspiracies
+python -m spacy download en_core_web_sm
 ```
 
 Note that this package is dependent on AllenNLP and thus does not support Windows.
