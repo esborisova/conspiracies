@@ -45,5 +45,5 @@ def test_headword():
         for span in d._.relation_head:
             headword = span._.most_common_ancestor
 
-            assert isinstance(headword, Span)
-            assert headword.text == "Frederiksen"
+        assert isinstance(headword, Span)
+        assert headword.text == "Frederiksen"
