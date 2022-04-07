@@ -83,7 +83,7 @@ class CoreferenceComponent(TrainablePipe):
                     for coref in corefs:
                         coref._.antecedent = corefs[0]
                         if sent == coref.sent:
-                            sent._.coref_cluster.append((cluster,coref))
+                            sent._.coref_cluster.append((cluster, coref))
                             sent._.antecedent = coref_clusters_lookup_dict[cluster][0]
 
     def __call__(self, doc: Doc) -> Doc:
