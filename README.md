@@ -58,6 +58,25 @@ for sent in doc.sents:
 
 This should produce the following output
 
+```python
+DOC LEVEL (Coref clusters)
+[(0, [Julie, She])]
+-----
+
+SPAN LEVEL (sentences)
+[(0, Julie)]
+[(0, She)]
+-----
+
+SPAN LEVEL (entities)
+
+Coref Entity: Julie 
+Antecedent: Julie
+
+
+Coref Entity: She 
+Antecedent: Julie
+```
 
 ## FAQ
 
