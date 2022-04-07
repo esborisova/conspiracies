@@ -42,6 +42,13 @@ for sent in doc.sents:
     assert isinstance(sent._.coref_cluster[0][0], int)
     assert isinstance(sent._.coref_cluster[0][1], spacy.tokens.Span)
 ```
+
+
+<details>
+  <summary>Details on output </summary>
+
+Examining the output a bit further:
+
 ```python
 print("DOC LEVEL (Coref clusters)")
 print(doc._.coref_clusters)
@@ -76,6 +83,9 @@ Antecedent: Julie
 Coref Entity: She 
 Antecedent: Julie
 ```
+
+</details>
+
 
 ## FAQ
 
