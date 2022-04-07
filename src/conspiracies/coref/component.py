@@ -5,8 +5,6 @@ A SpaCy component for coference using an AllenNLP coference model.
 from typing import Dict, Iterable, Iterator, Union
 from pathlib import Path
 
-import spacy
-from allennlp.models.archival import load_archive
 from spacy import Vocab
 from spacy.language import Language
 from spacy.pipeline import TrainablePipe
