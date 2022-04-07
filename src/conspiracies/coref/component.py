@@ -55,12 +55,12 @@ class CoreferenceComponent(TrainablePipe):
         self.model = CoreferenceModel(model_path=model_path, device=device)
 
         # Register custom extension on the Doc and Span
-        if not Doc.has_extension("coref_chains"):
-            Doc.set_extension("coref_chains", default=[])
-        if not Span.has_extension("coref_chains"):
-            Span.set_extension("coref_chains", default=[])
         if not Doc.has_extension("coref_clusters"):
             Doc.set_extension("coref_clusters", default=[])
+        if not Span.has_extension("coref_cluster"):
+            Span.set_extension("coref_cluster", default=[])
+        if not Span.has_extension("antecedent"):
+            Span.set_extension("antecedent", default=Span)
 
     def set_annotations(self, docs: Iterable[Doc], model_output) -> None:
         """Set the coref attributes on Doc and Token level
@@ -70,21 +70,23 @@ class CoreferenceComponent(TrainablePipe):
         """
         for doc, prediction in zip(docs, model_output):
             clusters = prediction["clusters"]
-            doc._.coref_clusters.append(clusters)
-
-            coref_chains = [
+            coref_clusters = [
                 (
                     clusters.index(d),
                     [doc[cluster_ids[0] : cluster_ids[1] + 1] for cluster_ids in d],
                 )
                 for d in clusters
             ]
-            doc._.coref_chains.append(coref_chains)
-            for span in doc.sents:
-                for cluster, corefs in coref_chains:
+            doc._.coref_clusters.append(coref_clusters)
+            doc._.coref_clusters = coref_clusters
+            coref_clusters_lookup_dict = dict(coref_clusters)
+            for sent in doc.sents:
+                for cluster, corefs in coref_clusters:
                     for coref in corefs:
-                        if span == coref.sent:
-                            span._.coref_chains.append(coref)
+                        coref._.antecedent = corefs[0]
+                        if sent == coref.sent:
+                            sent._.coref_cluster.append((cluster,coref))
+                            sent._.antecedent = coref_clusters_lookup_dict[cluster][0]
 
     def __call__(self, doc: Doc) -> Doc:
         """

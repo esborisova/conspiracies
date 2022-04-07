@@ -35,12 +35,29 @@ nlp = spacy.load("en_core_web_sm")
 nlp.add_pipe("allennlp_coref")
 doc = nlp("Do you see Julie over there? She is really into programming!")
 
-assert isinstance(doc._.coref_chains, list)
+assert isinstance(doc._.coref_clusters, list)
 
 for sent in doc.sents:
-    assert isinstance(sent._.coref_chains, list)
-    assert isinstance(sent._.coref_chains[0], spacy.tokens.Span)
+    assert isinstance(sent._.coref_cluster, list)
+    assert isinstance(sent._.coref_cluster[0], tuple)
+    assert isinstance(sent._.coref_cluster[0][0], int)
+    assert isinstance(sent._.coref_cluster[0][1], spacy.tokens.Span)
 ```
+```python
+print("DOC LEVEL (Coref clusters)")
+print(doc._.coref_clusters)
+print("-----\n\nSPAN LEVEL (sentences)")
+for sent in doc.sents:
+    print(sent._.coref_cluster)
+print("-----\n\nSPAN LEVEL (entities)\n")
+for sent in doc.sents:
+    for i, coref_entity in sent._.coref_cluster:
+        print(f"Coref Entity: {coref_entity} \nAntecedent: {coref_entity._.antecedent}")
+        print("\n")
+```
+
+This should produce the following output
+
 
 ## FAQ
 
