@@ -17,7 +17,6 @@ Installation using pip:
 ```bash
 pip install pip --upgrade
 pip install conspiracies
-python -m spacy download en_core_web_sm
 ```
 
 Note that this package is dependent on AllenNLP and thus does not support Windows.
@@ -31,7 +30,7 @@ A small use case of the coreference component in spaCy.
 import spacy
 from conspiracies.coref import CoreferenceComponent 
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.blank("da")
 nlp.add_pipe("allennlp_coref")
 doc = nlp("Do you see Julie over there? She is really into programming!")
 
