@@ -3,10 +3,10 @@ Pipeline for headwords/entities extractions and frequency count
 """
 
 from relationextraction import SpacyRelationExtractor
+from heads_extract_component import HeadwordsExtraction
 import spacy
 from spacy.tokens import Span
 from collections import Counter
-from extract_heads import most_common_ancestor, set_extensions
 
 
 nlp = spacy.load("en_core_web_lg")
@@ -15,12 +15,9 @@ test_sents = ["Mette Frederiksen is the Danish politician."]
 
 config = {"confidence_threshold": 2.7, "model_args": {"batch_size": 10}}
 nlp.add_pipe("relation_extractor", config=config)
+nlp.add_pipe("heads_extraction")
 
 pipe = nlp.pipe(test_sents)
-
-set_extensions(
-    extention_name="most_common_ancestor", extention=most_common_ancestor, levels=[Span]
-)
 
 heads_spans = []
 
