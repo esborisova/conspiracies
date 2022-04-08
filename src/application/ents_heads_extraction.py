@@ -3,7 +3,7 @@ Pipeline for headwords/entities extractions and frequency count
 """
 
 from relationextraction import SpacyRelationExtractor
-from heads_extract_component import HeadwordsExtraction
+from heads_extract_component import HeadwordsExtraction, contains_ents
 import spacy
 from spacy.tokens import Span
 from collections import Counter
@@ -20,12 +20,20 @@ nlp.add_pipe("heads_extraction")
 pipe = nlp.pipe(test_sents)
 
 heads_spans = []
+ents_spans = []
 
 for d in pipe:
     for span in d._.relation_head:
         heads_spans.append(span._.most_common_ancestor)
+        if span.ents:
+            ents_spans.append(list(span.ents))
     for span in d._.relation_tail:
         heads_spans.append(span._.most_common_ancestor)
+        if span.ents:
+            ents_spans.append(list(span.ents))
 
 # Filter out headwords without an entity type
-# filtered_heads = list(filter(contains_ents, heads_spans))
+filtered_heads = list(filter(contains_ents, heads_spans))
+
+# Flatten the list with ents
+flat_ents_list = [ent for sublist in ents_spans for ent in sublist]

@@ -1,37 +1,66 @@
 """Headwords extraction as a spaCy component. """
 import spacy
 from spacy.tokens import Doc, Span, Token
+from typing import Union
 from spacy.language import Language
 from collections import Counter
 from warnings import warn
 
 
-@Language.factory("heads_extraction")
-def create_headwords_component(nlp: Language, name: str):
+@Language.factory(
+    "heads_extraction",
+    default_config={
+        "raise_error": False,
+        "normalize_to_entity": False,
+        "normalize_to_noun_chunk": False,
+    },
+)
+def create_headwords_component(
+    nlp: Language,
+    name: str,
+    raise_error: bool,
+    normalize_to_entity: bool,
+    normalize_to_noun_chunk: bool,
+):
     """
     Allows HeadwordsExtraction to be added to a spaCy pipe using nlp.add_pipe("heads_extraction").
     """
-    return HeadwordsExtraction(nlp)
+    return HeadwordsExtraction(
+        nlp,
+        name=name,
+        raise_error=raise_error,
+        normalize_to_entity=normalize_to_entity,
+        normalize_to_noun_chunk=normalize_to_noun_chunk,
+    )
 
 
 class HeadwordsExtraction:
-    def __init__(self, nlp: Language):
-        """Initialise components"""
+    def __init__(
+        self,
+        nlp: Language,
+        name: str,
+        raise_error: bool,
+        normalize_to_entity: bool,
+        normalize_to_noun_chunk: bool,
+    ):
 
+        self.raise_error = raise_error
+        self.normalize_to_entity = normalize_to_entity
+        self.normalize_to_noun_chunk = normalize_to_noun_chunk
+
+        """Initialise components"""
         extensions = [
-            "normalize_token_to_span",
+            "normalize_to_span",
             "most_common_ancestor",
-            "contains_ents",
         ]
 
         functions = [
-            self.normalize_token_to_span,
+            self.normalize_to_span,
             self.most_common_ancestor,
-            self.contains_ents,
         ]
 
         for extention, function in zip(extensions, functions):
-            if extention == "normalize_token_to_span":
+            if extention == "normalize_to_span":
                 if not Token.has_extension(extention):
                     Token.set_extension(extention, getter=function)
             else:
@@ -44,7 +73,40 @@ class HeadwordsExtraction:
         """Run the pipeline component"""
         return doc
 
-    def normalize_token_to_span(
+    def to_entity(self, token: Token) -> Span:
+        """
+        Normalize token to an entity.
+
+        Args:
+
+            token(Token): The token to normalize.
+
+        Returns:
+            Span: The entity.
+        """
+
+        for ent in token.doc.ents:
+            if token in ent:
+                return ent
+
+    def to_noun_chunk(self, token: Token) -> Span:
+        """
+        Normalize token to a noun chunk.
+
+        Args:
+
+            token(Token): The token to normalize.
+
+        Returns:
+            Span: The noun chunk.
+        """
+
+        doc = token.doc
+        for noun_chunk in doc.noun_chunks:
+            if token in noun_chunk:
+                return noun_chunk
+
+    def normalize_to_span(
         self,
         token: Token,
         normalize_to_entity: bool = False,
@@ -65,21 +127,21 @@ class HeadwordsExtraction:
             Span: The normalized token.
         """
 
-        if normalize_to_entity and token.ent_type:
-            for ent in token.doc.ents:
-                if token in ent:
-                    return ent
+        if self.normalize_to_entity:
+            ent = self.to_entity(token)
+            return ent
 
-        if normalize_to_noun_chunk:
-            doc = token.doc
-            for noun_chunk in doc.noun_chunks:
-                if token in noun_chunk:
-                    return noun_chunk
+        if self.normalize_to_noun_chunk:
+            noun_chunk = self.to_noun_chunk(token)
+            return noun_chunk
+
         else:
             doc = token.doc
             return doc[token.i : token.i + 1]
 
-    def most_common_ancestor(self, span: Span, raise_error: bool = False) -> Span:
+    def most_common_ancestor(
+        self, span: Union[Doc, Span], raise_error: bool = False
+    ) -> Span:
         """
         Find the most common ancestor in a span.
 
@@ -101,7 +163,7 @@ class HeadwordsExtraction:
         )
         most_common_ancestor = ancestors_in_span.most_common()[0][0]
 
-        normalized_token = self.normalize_token_to_span(most_common_ancestor)
+        normalized_token = self.normalize_to_span(most_common_ancestor)
 
         if len(normalized_token) != 1:
             error_message = f"None of the tokens in the span ({span}) contains an ancestor within this span."
@@ -111,18 +173,19 @@ class HeadwordsExtraction:
 
         return normalized_token
 
-    def contains_ents(self, span: Span) -> bool:
-        """
-        Check if a span contains entities.
 
-        Args:
-            span (Span): The span to find entites in.
+def contains_ents(span: Union[Doc, Span]) -> bool:
+    """
+    Check if a span contains entities.
 
-        Returns:
-            bool: Returns True if a token has an entity label.
-        """
+    Args:
+        span (Span): The span to find entites in.
 
-        for token in span:
-            if token.ent_type:
-                return True
-        return False
+    Returns:
+        bool: Returns True if a token has an entity label.
+    """
+
+    for token in span:
+        if token.ent_type:
+            return True
+    return False
