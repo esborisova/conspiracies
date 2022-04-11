@@ -58,7 +58,7 @@ class CoreferenceComponent(TrainablePipe):
         if not Span.has_extension("coref_cluster"):
             Span.set_extension("coref_cluster", default=[])
         if not Span.has_extension("antecedent"):
-            Span.set_extension("antecedent", default=[])
+            Span.set_extension("antecedent", default=None)
 
     def set_annotations(self, docs: Iterable[Doc], model_output) -> None:
         """Set the coref attributes on Doc and Token level
