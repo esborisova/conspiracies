@@ -13,4 +13,3 @@ def test_extentions():
 
     assert isinstance(doc[:]._.most_common_ancestor, Span)  # Doc
     assert isinstance(doc[0:2]._.most_common_ancestor, Span)  # Span
-    assert isinstance(doc[0]._.normalize_to_span, Span)
