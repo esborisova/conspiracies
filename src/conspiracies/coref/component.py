@@ -5,8 +5,6 @@ A SpaCy component for coference using an AllenNLP coference model.
 from typing import Dict, Iterable, Iterator, Union
 from pathlib import Path
 
-import spacy
-from allennlp.models.archival import load_archive
 from spacy import Vocab
 from spacy.language import Language
 from spacy.pipeline import TrainablePipe
@@ -60,7 +58,7 @@ class CoreferenceComponent(TrainablePipe):
         if not Span.has_extension("coref_cluster"):
             Span.set_extension("coref_cluster", default=[])
         if not Span.has_extension("antecedent"):
-            Span.set_extension("antecedent", default=Span)
+            Span.set_extension("antecedent", default=None)
 
     def set_annotations(self, docs: Iterable[Doc], model_output) -> None:
         """Set the coref attributes on Doc and Token level
@@ -85,7 +83,7 @@ class CoreferenceComponent(TrainablePipe):
                     for coref in corefs:
                         coref._.antecedent = corefs[0]
                         if sent == coref.sent:
-                            sent._.coref_cluster.append((cluster,coref))
+                            sent._.coref_cluster.append((cluster, coref))
                             sent._.antecedent = coref_clusters_lookup_dict[cluster][0]
 
     def __call__(self, doc: Doc) -> Doc:

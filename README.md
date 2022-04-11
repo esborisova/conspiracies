@@ -17,7 +17,6 @@ Installation using pip:
 ```bash
 pip install pip --upgrade
 pip install conspiracies
-python -m spacy download en_core_web_sm
 ```
 
 Note that this package is dependent on AllenNLP and thus does not support Windows.
@@ -31,7 +30,7 @@ A small use case of the coreference component in spaCy.
 import spacy
 from conspiracies.coref import CoreferenceComponent 
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.blank("da")
 nlp.add_pipe("allennlp_coref")
 doc = nlp("Do you see Julie over there? She is really into programming!")
 
@@ -43,6 +42,13 @@ for sent in doc.sents:
     assert isinstance(sent._.coref_cluster[0][0], int)
     assert isinstance(sent._.coref_cluster[0][1], spacy.tokens.Span)
 ```
+
+
+<details>
+  <summary>Details on output </summary>
+
+Examining the output a bit further:
+
 ```python
 print("DOC LEVEL (Coref clusters)")
 print(doc._.coref_clusters)
@@ -77,6 +83,9 @@ Antecedent: Julie
 Coref Entity: She 
 Antecedent: Julie
 ```
+
+</details>
+
 
 ## FAQ
 
