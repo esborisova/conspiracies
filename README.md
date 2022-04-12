@@ -91,7 +91,7 @@ Antecedent: Julie
 
 ### How do I run the tests?
 To run the test, you will need to install the package in editable model. This is
-intentional as this ensures that you always run the package installation before running
+intentional as it ensures that you always run the package installation before running
 the tests, which ensures that the installation process works as intended.
 
 To run the test you can use the following code:
