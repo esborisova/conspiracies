@@ -1,4 +1,4 @@
-from .utils import nlp_en
+from .utils import nlp_en  # noqa
 
 from spacy.tokens import Span
 import conspiracies  # noqa
