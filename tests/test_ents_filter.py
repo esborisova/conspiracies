@@ -1,8 +1,5 @@
 import spacy
-from spacy.tokens import Span
-from relationextraction import SpacyRelationExtractor
-from heads_extract_component import contains_ents
-from collections import Counter
+from conspiracies.component_HeadWordExtraction import contains_ents
 
 
 def test_ents_filter():
@@ -11,10 +8,6 @@ def test_ents_filter():
     nlp.add_pipe("heads_extraction")
 
     doc = nlp("Mette Frederiksen is the Danish politician.")
-    span = doc[:]
-    span1 = doc[1:2]
-    span2 = doc[2:4]
-
-    assert contains_ents(span) == True
-    assert contains_ents(span1) == True
-    assert contains_ents(span2) == False
+    assert contains_ents(doc[:]) is True
+    assert contains_ents(doc[1:2]) is True
+    assert contains_ents(doc[2:4]) is False
