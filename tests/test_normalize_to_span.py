@@ -8,7 +8,7 @@ from heads_extract_component import HeadwordsExtraction
 def test_normalize_to_span():
 
     nlp = spacy.load("en_core_web_lg")
-    nlp.add_pipe("heads_extraction", config={"force" = True})
+    nlp.add_pipe("heads_extraction", config={"force": True})
 
     doc = nlp("Mette Frederiksen is the Danish politician.")
 
@@ -31,7 +31,9 @@ def test_normalize_to_span():
 def test_normalize_to_entity():
 
     nlp = spacy.load("en_core_web_lg")
-    nlp.add_pipe("heads_extraction", config={"normalize_to_entity": True, force=True})
+    nlp.add_pipe(
+        "heads_extraction", config={"normalize_to_entity": True, "force": True}
+    )
 
     doc = nlp("Mette Frederiksen is the Danish politician.")
 
@@ -44,7 +46,9 @@ def test_normalize_to_entity():
 def test_normalize_to_noun_chunk():
 
     nlp = spacy.load("en_core_web_lg")
-    nlp.add_pipe("heads_extraction", config={"normalize_to_noun_chunk": True, force=True})
+    nlp.add_pipe(
+        "heads_extraction", config={"normalize_to_noun_chunk": True, "force": True}
+    )
 
     doc = nlp("Mette Frederiksen is the Danish politician.")
 
