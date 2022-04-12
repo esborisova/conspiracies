@@ -28,7 +28,7 @@ def test_normalize_to_span():
 
 def test_normalize_to_entity():
 
-    nlp = spacy.load("en_core_web_lg")
+    nlp = spacy.load("en_core_web_sm")
     nlp.add_pipe(
         "heads_extraction", config={"normalize_to_entity": True, "force": True}
     )
@@ -43,7 +43,7 @@ def test_normalize_to_entity():
 
 def test_normalize_to_noun_chunk():
 
-    nlp = spacy.load("en_core_web_lg")
+    nlp = spacy.load("en_core_web_sm")
     nlp.add_pipe(
         "heads_extraction", config={"normalize_to_noun_chunk": True, "force": True}
     )

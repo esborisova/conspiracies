@@ -1,16 +1,16 @@
-import spacy
+from .utils import nlp_da
+
 from conspiracies.coref.CoreferenceModel import CoreferenceModel
 
 
-def test_CoreferenceModel():
+def test_CoreferenceModel(nlp_da):
     model = CoreferenceModel()  # check that the model loads as intended
 
-    nlp = spacy.load("da_core_news_sm")
     text = [
         "Hej Kenneth, har du en fed teksts vi kan skrive om dig?",
         "Ja, det kan du tro min fine ven.",
     ]
-    docs = nlp.pipe(text)
+    docs = nlp_da.pipe(text)
 
     # test batches forward
     outputs = model.predict_batch_docs(docs)
