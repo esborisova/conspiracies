@@ -41,7 +41,7 @@ def test_normalize_to_entity():
     assert normalized_token.text == "Mette Frederiksen"
 
 
-def test_normalize_to_span():
+def test_normalize_to_noun_chunk():
 
     nlp = spacy.load("en_core_web_lg")
     nlp.add_pipe("heads_extraction", config={"normalize_to_noun_chunk": True, force=True})
