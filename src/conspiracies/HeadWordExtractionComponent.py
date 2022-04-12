@@ -165,10 +165,10 @@ class HeadwordsExtractionComponent:
 
 def contains_ents(span: Union[Doc, Span]) -> bool:
     """
-    Check if a span contains entities.
+    Check if a Doc or span contains entities.
 
     Args:
-        span (Span): The span to find entites in.
+        span (Union[Doc, Span]): The span to find entites in.
 
     Returns:
         bool: Returns True if a token has an entity label.
