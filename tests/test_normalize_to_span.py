@@ -31,7 +31,7 @@ def test_normalize_to_span():
 def test_normalize_to_entity():
 
     nlp = spacy.load("en_core_web_lg")
-    nlp.add_pipe("heads_extraction", config={"normalize_to_entity": True})
+    nlp.add_pipe("heads_extraction", config={"normalize_to_entity": True, force=True})
 
     doc = nlp("Mette Frederiksen is the Danish politician.")
 
