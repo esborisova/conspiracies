@@ -88,6 +88,24 @@ Antecedent: Julie
 </details>
 
 
+### Headword Extraction
+A small use case of how to use the headword extraction component to extract headwords.
+
+```python
+import spacy
+from conspiracies.HeadWordExtractionComponent import contains_ents
+
+nlp = spacy.load("en_core_web_sm")
+nlp.add_pipe("heads_extraction")
+
+doc = nlp("Mette Frederiksen is the Danish politician.")
+heads_spans = []
+
+for sent in doc:
+    sent._.most_common_ancestor  # extract the most common ancestor i.e. span head
+```
+
+
 ## FAQ
 
 ### How do I run the tests?
