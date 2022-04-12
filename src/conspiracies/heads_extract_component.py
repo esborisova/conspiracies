@@ -161,7 +161,8 @@ class HeadwordsExtraction:
 
         if self.normalize_to_noun_chunk:
             noun_chunk = self.to_noun_chunk(token)
-            return noun_chunk
+            if noun_chunk:
+                return noun_chunk
 
         else:
             doc = token.doc
