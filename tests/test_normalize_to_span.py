@@ -22,7 +22,7 @@ def test_normalize_to_span():
     assert isinstance(normalized_token, Span)
     assert normalized_token.text == "Mette Frederiksen"
 
-    normalized_token = doc[:]._.to_span  # Doc
+    normalized_token = doc._.to_span  # Doc
 
     assert isinstance(normalized_token, Span)
     assert normalized_token.text == "Mette Frederiksen is the Danish politician."
