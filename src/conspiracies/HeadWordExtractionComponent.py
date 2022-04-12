@@ -8,7 +8,7 @@ from spacy.tokens import Doc, Span, Token
 from spacy.language import Language
 
 
-class HeadwordsExtraction:
+class HeadwordsExtractionComponent:
     """
     A class for extracting headwords from a given text document.
 
@@ -196,7 +196,7 @@ def create_headwords_component(
     normalize_to_entity: bool,
     normalize_to_noun_chunk: bool,
     force: bool,
-) -> HeadwordsExtraction:
+) -> HeadwordsExtractionComponent:
     """
     Allows HeadwordsExtraction to be added to a spaCy pipe using
     nlp.add_pipe("heads_extraction").
@@ -214,7 +214,7 @@ def create_headwords_component(
         HeadwordsExtraction: A spaCy component.
     """
 
-    return HeadwordsExtraction(
+    return HeadwordsExtractionComponent(
         nlp,
         name=name,
         raise_error=raise_error,

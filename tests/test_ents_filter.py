@@ -1,6 +1,6 @@
 import spacy
 from spacy.tokens import Doc, Span
-from conspiracies.component_HeadWordExtraction import contains_ents
+from conspiracies.HeadWordExtractionComponent import contains_ents
 
 
 def test_ents_filter():

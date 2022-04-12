@@ -4,10 +4,10 @@ Pipeline for headwords/entities extractions and frequency count
 import spacy
 
 from relationextraction import SpacyRelationExtractor  # noqa
-from conspiracies.component_HeadWordExtraction import contains_ents
+from conspiracies.HeadWordExtractionComponent import contains_ents
 
 
-def main()
+def main():
     nlp = spacy.load("en_core_web_lg")
 
     test_sents = ["Mette Frederiksen is the Danish politician."]
