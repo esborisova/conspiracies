@@ -174,7 +174,6 @@ class HeadwordsExtraction:
 
         Args:
            span(Span): The span to find the most common ancestor of.
-
            raise_error(bool): Raises warning message if no ancestor is found within a span.
 
         Returns:
