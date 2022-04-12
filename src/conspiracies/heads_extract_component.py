@@ -14,7 +14,7 @@ from warnings import warn
         "raise_error": False,
         "normalize_to_entity": False,
         "normalize_to_noun_chunk": False,
-        "force": True
+        "force": True,
     },
 )
 def create_headwords_component(
@@ -23,7 +23,7 @@ def create_headwords_component(
     raise_error: bool,
     normalize_to_entity: bool,
     normalize_to_noun_chunk: bool,
-    force: bool
+    force: bool,
 ) -> HeadwordsExtraction:
     """
     Allows HeadwordsExtraction to be added to a spaCy pipe using nlp.add_pipe("heads_extraction").
@@ -40,7 +40,7 @@ def create_headwords_component(
         normalize_to_noun_chunk (bool): If True, normalizes a token to a noun chunk.
 
     Returns:
-        HeadwordsExtraction: A spaCy component. 
+        HeadwordsExtraction: A spaCy component.
     """
 
     return HeadwordsExtraction(
@@ -74,7 +74,7 @@ class HeadwordsExtraction:
         raise_error: bool,
         normalize_to_entity: bool,
         normalize_to_noun_chunk: bool,
-        force: bool = True
+        force: bool = True,
     ):
         """Initialise components"""
 
@@ -95,7 +95,9 @@ class HeadwordsExtraction:
                 getter=lambda doc: self.most_common_ancestor(doc[:], force=force),
             )
         if not Span.has_extension("most_common_ancestor") or force:
-            Span.set_extension("most_common_ancestor", getter=self.most_common_ancestor, force=force)
+            Span.set_extension(
+                "most_common_ancestor", getter=self.most_common_ancestor, force=force
+            )
 
     def __call__(self, doc: Doc):
         """Run the pipeline component"""
