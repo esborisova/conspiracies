@@ -8,7 +8,7 @@ from heads_extract_component import HeadwordsExtraction
 def test_normalize_to_span():
 
     nlp = spacy.load("en_core_web_lg")
-    nlp.add_pipe("heads_extraction")
+    nlp.add_pipe("heads_extraction", config={"force" = True})
 
     doc = nlp("Mette Frederiksen is the Danish politician.")
 
