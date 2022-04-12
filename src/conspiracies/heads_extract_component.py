@@ -1,4 +1,5 @@
 """Headwords extraction as a spaCy component. """
+from msilib.schema import Component
 import spacy
 from spacy.tokens import Doc, Span, Token
 from typing import Union
@@ -23,7 +24,7 @@ def create_headwords_component(
     normalize_to_entity: bool,
     normalize_to_noun_chunk: bool,
     force: bool
-):
+) -> HeadwordsExtraction:
     """
     Allows HeadwordsExtraction to be added to a spaCy pipe using nlp.add_pipe("heads_extraction").
 
@@ -39,7 +40,7 @@ def create_headwords_component(
         normalize_to_noun_chunk (bool): If True, normalizes a token to a noun chunk.
 
     Returns:
-        _type_: _description_
+        HeadwordsExtraction: A spaCy component. 
     """
 
     return HeadwordsExtraction(
