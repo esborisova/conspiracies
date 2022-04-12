@@ -1,11 +1,11 @@
 """Headwords extraction as a spaCy component. """
-from msilib.schema import Component
-import spacy
-from spacy.tokens import Doc, Span, Token
+
 from typing import Union
-from spacy.language import Language
-from collections import Counter
 from warnings import warn
+from collections import Counter
+
+from spacy.tokens import Doc, Span, Token
+from spacy.language import Language
 
 
 class HeadwordsExtraction:
