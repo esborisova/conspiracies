@@ -8,51 +8,6 @@ from collections import Counter
 from warnings import warn
 
 
-@Language.factory(
-    "heads_extraction",
-    default_config={
-        "raise_error": False,
-        "normalize_to_entity": False,
-        "normalize_to_noun_chunk": False,
-        "force": True,
-    },
-)
-def create_headwords_component(
-    nlp: Language,
-    name: str,
-    raise_error: bool,
-    normalize_to_entity: bool,
-    normalize_to_noun_chunk: bool,
-    force: bool,
-) -> HeadwordsExtraction:
-    """
-    Allows HeadwordsExtraction to be added to a spaCy pipe using nlp.add_pipe("heads_extraction").
-
-    Args:
-        nlp (Language): Language processing pipelines.
-
-        name (str): The instance name of the component in the pipeline.
-
-        raise_error (bool): If True, raises warning message in case no ancestor is found within a span.
-
-        normalize_to_entity (bool): If True, normalizes a token to an entity.
-
-        normalize_to_noun_chunk (bool): If True, normalizes a token to a noun chunk.
-
-    Returns:
-        HeadwordsExtraction: A spaCy component.
-    """
-
-    return HeadwordsExtraction(
-        nlp,
-        name=name,
-        raise_error=raise_error,
-        normalize_to_entity=normalize_to_entity,
-        normalize_to_noun_chunk=normalize_to_noun_chunk,
-        force=force,
-    )
-
-
 class HeadwordsExtraction:
     """
     A class for extracting headwords from a given text document.z
@@ -217,3 +172,48 @@ def contains_ents(span: Union[Doc, Span]) -> bool:
         if token.ent_type:
             return True
     return False
+
+
+@Language.factory(
+    "heads_extraction",
+    default_config={
+        "raise_error": False,
+        "normalize_to_entity": False,
+        "normalize_to_noun_chunk": False,
+        "force": True,
+    },
+)
+def create_headwords_component(
+    nlp: Language,
+    name: str,
+    raise_error: bool,
+    normalize_to_entity: bool,
+    normalize_to_noun_chunk: bool,
+    force: bool,
+) -> HeadwordsExtraction:
+    """
+    Allows HeadwordsExtraction to be added to a spaCy pipe using nlp.add_pipe("heads_extraction").
+
+    Args:
+        nlp (Language): Language processing pipelines.
+
+        name (str): The instance name of the component in the pipeline.
+
+        raise_error (bool): If True, raises warning message in case no ancestor is found within a span.
+
+        normalize_to_entity (bool): If True, normalizes a token to an entity.
+
+        normalize_to_noun_chunk (bool): If True, normalizes a token to a noun chunk.
+
+    Returns:
+        HeadwordsExtraction: A spaCy component.
+    """
+
+    return HeadwordsExtraction(
+        nlp,
+        name=name,
+        raise_error=raise_error,
+        normalize_to_entity=normalize_to_entity,
+        normalize_to_noun_chunk=normalize_to_noun_chunk,
+        force=force,
+    )
