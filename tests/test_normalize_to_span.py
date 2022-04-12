@@ -25,6 +25,7 @@ def test_normalize_to_span(nlp_en):
     assert normalized_token.text == "Mette Frederiksen is the Danish politician."
 
 
+
 def test_normalize_to_entity(nlp_en):
     nlp_en.add_pipe(
         "heads_extraction", config={"normalize_to_entity": True, "force": True}
@@ -38,7 +39,7 @@ def test_normalize_to_entity(nlp_en):
     assert normalized_token.text == "Mette Frederiksen"
 
 
-def test_normalize_to_noun_chunk():
+def test_normalize_to_noun_chunk(nlp_en):
     nlp_en.add_pipe(
         "heads_extraction", config={"normalize_to_noun_chunk": True, "force": True}
     )
