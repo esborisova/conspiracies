@@ -10,14 +10,15 @@ from spacy.language import Language
 
 class HeadwordsExtraction:
     """
-    A class for extracting headwords from a given text document.z
+    A class for extracting headwords from a given text document.
 
     Args:
         nlp (Language): Language processing pipelines.
         name (str): The instance name of the component in the pipeline.
 
     Attributes:
-        raise_error (bool): If True, raises warning message in case no ancestor is found within a span.
+        raise_error (bool): If True, raises warning message in case no ancestor is found
+            within a span.
         normalize_to_entity (bool): If True, normalizes a token to an entity.
         normalize_to_noun_chunk (bool): If True, normalizes a token to a noun chunk.
     """
@@ -47,7 +48,8 @@ class HeadwordsExtraction:
         if not Doc.has_extension("most_common_ancestor") or force:
             Doc.set_extension(
                 "most_common_ancestor",
-                getter=lambda doc: self.most_common_ancestor(doc[:], force=force),
+                getter=lambda doc: self.most_common_ancestor(doc[:]),
+                force=force,
             )
         if not Span.has_extension("most_common_ancestor") or force:
             Span.set_extension(
@@ -100,10 +102,10 @@ class HeadwordsExtraction:
 
         Args:
             token(Token): The token to normalize.
-
-            normalize_to_entity(bool, optional): If a token is an entity returns a token normilized to an entity.
-
-            normalize_to_noun_chunk(bool, optional): If True, returns a base noun phrase which a token is part of.
+            normalize_to_entity(bool, optional): If a token is an entity returns a token
+                normilized to an entity
+            normalize_to_noun_chunk(bool, optional): If True, returns a base noun phrase
+                which a token is part of.
 
         Returns:
             Span: The normalized token.
@@ -131,7 +133,8 @@ class HeadwordsExtraction:
 
         Args:
            span(Span): The span to find the most common ancestor of.
-           raise_error(bool): Raises warning message if no ancestor is found within a span.
+           raise_error(bool): Raises warning message if no ancestor is found within a
+            span.
 
         Returns:
             Span: The most common ancestor of the span.
@@ -149,7 +152,10 @@ class HeadwordsExtraction:
         normalized_token = self.to_span(most_common_ancestor)
 
         if len(normalized_token) != 1:
-            error_message = f"None of the tokens in the span ({span}) contains an ancestor within this span."
+            error_message = (
+                f"None of the tokens in the span ({span}) contains an"
+                + " ancestor within this span."
+            )
 
             if raise_error:
                 warn(error_message)
@@ -192,17 +198,16 @@ def create_headwords_component(
     force: bool,
 ) -> HeadwordsExtraction:
     """
-    Allows HeadwordsExtraction to be added to a spaCy pipe using nlp.add_pipe("heads_extraction").
+    Allows HeadwordsExtraction to be added to a spaCy pipe using
+    nlp.add_pipe("heads_extraction").
 
     Args:
         nlp (Language): Language processing pipelines.
 
         name (str): The instance name of the component in the pipeline.
-
-        raise_error (bool): If True, raises warning message in case no ancestor is found within a span.
-
+        raise_error (bool): If True, raises warning message in case no ancestor is found
+            within a span.
         normalize_to_entity (bool): If True, normalizes a token to an entity.
-
         normalize_to_noun_chunk (bool): If True, normalizes a token to a noun chunk.
 
     Returns:
