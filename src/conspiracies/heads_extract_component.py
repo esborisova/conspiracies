@@ -59,15 +59,11 @@ class HeadwordsExtraction:
 
     Args:
         nlp (Language): Language processing pipelines.
-
         name (str): The instance name of the component in the pipeline.
-
 
     Attributes:
         raise_error (bool): If True, raises warning message in case no ancestor is found within a span.
-
         normalize_to_entity (bool): If True, normalizes a token to an entity.
-
         normalize_to_noun_chunk (bool): If True, normalizes a token to a noun chunk.
     """
 
