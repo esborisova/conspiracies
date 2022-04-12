@@ -157,7 +157,8 @@ class HeadwordsExtraction:
 
         if self.normalize_to_entity:
             ent = self.to_entity(token)
-            return ent
+            if ent:
+                return ent
 
         if self.normalize_to_noun_chunk:
             noun_chunk = self.to_noun_chunk(token)
