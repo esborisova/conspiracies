@@ -55,8 +55,8 @@ class CoreferenceComponent(TrainablePipe):
         # Register custom extension on the Doc and Span
         if not Doc.has_extension("coref_clusters"):
             Doc.set_extension("coref_clusters", default=[])
-        if not Span.has_extension("coref_cluster"):
-            Span.set_extension("coref_cluster", default=[])
+        if not Span.has_extension("coref_clusters"):
+            Span.set_extension("coref_clusters", default=[])
         if not Span.has_extension("antecedent"):
             Span.set_extension("antecedent", default=None)
 
@@ -83,7 +83,7 @@ class CoreferenceComponent(TrainablePipe):
                     for coref in corefs:
                         coref._.antecedent = corefs[0]
                         if sent == coref.sent:
-                            sent._.coref_cluster.append((cluster, coref))
+                            sent._.coref_clusters.append((cluster, coref))
                             sent._.antecedent = coref_clusters_lookup_dict[cluster][0]
 
     def __call__(self, doc: Doc) -> Doc:

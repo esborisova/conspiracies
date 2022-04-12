@@ -32,7 +32,8 @@ jobs:
         pip install --editable .
     - name: Run and write pytest
       run: |
-        python -m  pytest --cov=src/conspiracies --cov-report term-missing | tee pytest-coverage.txt
+        set -o pipefail
+        pytest --cov=src/conspiracies --cov-report term-missing | tee pytest-coverage.txt
 
 
   pytest-coverage:
@@ -51,7 +52,8 @@ jobs:
         pip install --editable .
     - name: Run and write pytest
       run: |
-        python -m  pytest --cov=src/conspiracies --cov-report term-missing | tee pytest-coverage.txt
+        set -o pipefail
+        pytest --cov=src/conspiracies --cov-report term-missing | tee pytest-coverage.txt
     - name: Pytest coverage comment
       id: coverage-comment
       uses: MishaKav/pytest-coverage-comment@v1.1.25

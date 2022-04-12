@@ -6,6 +6,11 @@ allennlp_models>=2.9.0,<2.10.0
 # tests
 https://huggingface.co/spacy/da_core_news_sm/resolve/main/da_core_news_sm-any-py3-none-any.whl
 da-core-news-sm==3.2.0
+https://huggingface.co/spacy/en_core_web_sm/resolve/main/en_core_web_sm-any-py3-none-any.whl
+en-core-web-sm==3.2.0
+# to install relationextraction (should be fixed!)
+git+https://github.com/KennethEnevoldsen/Multi2OIE@patch-1
+
 
 # style
 black==22.3.0

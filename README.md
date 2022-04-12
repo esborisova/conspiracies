@@ -28,6 +28,7 @@ A small use case of the coreference component in spaCy.
 
 ```python
 import spacy
+from spacy.tokens import Span
 from conspiracies.coref import CoreferenceComponent 
 
 nlp = spacy.blank("da")
@@ -40,7 +41,7 @@ for sent in doc.sents:
     assert isinstance(sent._.coref_cluster, list)
     assert isinstance(sent._.coref_cluster[0], tuple)
     assert isinstance(sent._.coref_cluster[0][0], int)
-    assert isinstance(sent._.coref_cluster[0][1], spacy.tokens.Span)
+    assert isinstance(sent._.coref_cluster[0][1], Span)
 ```
 
 
@@ -87,11 +88,29 @@ Antecedent: Julie
 </details>
 
 
+### Headword Extraction
+A small use case of how to use the headword extraction component to extract headwords.
+
+```python
+import spacy
+from conspiracies.HeadWordExtractionComponent import contains_ents
+
+nlp = spacy.load("en_core_web_sm")
+nlp.add_pipe("heads_extraction")
+
+doc = nlp("Mette Frederiksen is the Danish politician.")
+heads_spans = []
+
+for sent in doc:
+    sent._.most_common_ancestor  # extract the most common ancestor i.e. span head
+```
+
+
 ## FAQ
 
 ### How do I run the tests?
 To run the test, you will need to install the package in editable model. This is
-intentional as this ensures that you always run the package installation before running
+intentional as it ensures that you always run the package installation before running
 the tests, which ensures that the installation process works as intended.
 
 To run the test you can use the following code:
