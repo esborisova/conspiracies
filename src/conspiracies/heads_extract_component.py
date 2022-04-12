@@ -13,6 +13,7 @@ from warnings import warn
         "raise_error": False,
         "normalize_to_entity": False,
         "normalize_to_noun_chunk": False,
+        "force": True
     },
 )
 def create_headwords_component(
