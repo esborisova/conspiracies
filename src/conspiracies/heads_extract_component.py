@@ -21,6 +21,7 @@ def create_headwords_component(
     raise_error: bool,
     normalize_to_entity: bool,
     normalize_to_noun_chunk: bool,
+    force: bool
 ):
     """
     Allows HeadwordsExtraction to be added to a spaCy pipe using nlp.add_pipe("heads_extraction").
@@ -31,6 +32,7 @@ def create_headwords_component(
         raise_error=raise_error,
         normalize_to_entity=normalize_to_entity,
         normalize_to_noun_chunk=normalize_to_noun_chunk,
+        force=force,
     )
 
 
