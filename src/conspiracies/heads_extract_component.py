@@ -24,7 +24,22 @@ def create_headwords_component(
 ):
     """
     Allows HeadwordsExtraction to be added to a spaCy pipe using nlp.add_pipe("heads_extraction").
+
+    Args:
+        nlp (Language): Language processing pipelines.
+
+        name (str): The instance name of the component in the pipeline.
+
+        raise_error (bool): If True, raises warning message in case no ancestor is found within a span.
+
+        normalize_to_entity (bool): If True, normalizes a token to an entity.
+
+        normalize_to_noun_chunk (bool): If True, normalizes a token to a noun chunk.
+
+    Returns:
+        _type_: _description_
     """
+
     return HeadwordsExtraction(
         nlp,
         name=name,
@@ -35,6 +50,23 @@ def create_headwords_component(
 
 
 class HeadwordsExtraction:
+    """
+    A class for extracting headwords from a given text document.z
+
+    Args:
+        nlp (Language): Language processing pipelines.
+
+        name (str): The instance name of the component in the pipeline.
+
+
+    Attributes:
+        raise_error (bool): If True, raises warning message in case no ancestor is found within a span.
+
+        normalize_to_entity (bool): If True, normalizes a token to an entity.
+
+        normalize_to_noun_chunk (bool): If True, normalizes a token to a noun chunk.
+    """
+
     def __init__(
         self,
         nlp: Language,
@@ -76,7 +108,6 @@ class HeadwordsExtraction:
         Normalize token to an entity.
 
         Args:
-
             token(Token): The token to normalize.
 
         Returns:
@@ -92,7 +123,6 @@ class HeadwordsExtraction:
         Normalize token to a noun chunk.
 
         Args:
-
             token(Token): The token to normalize.
 
         Returns:
@@ -106,7 +136,7 @@ class HeadwordsExtraction:
 
     def to_span(
         self,
-        token: Token,
+        token: Union[Token, Span, Doc],
         normalize_to_entity: bool = False,
         normalize_to_noun_chunk: bool = False,
     ) -> Span:
@@ -114,7 +144,6 @@ class HeadwordsExtraction:
         Normalize token to a span.
 
         Args:
-
             token(Token): The token to normalize.
 
             normalize_to_entity(bool, optional): If a token is an entity returns a token normilized to an entity.
