@@ -1,14 +1,13 @@
-import spacy
+from .utils import nlp_en
+
 from spacy.tokens import Span
 import conspiracies  # noqa
 
 
-def test_normalize_to_span():
+def test_normalize_to_span(nlp_en):
+    nlp_en.add_pipe("heads_extraction", config={"force": True})
 
-    nlp = spacy.load("en_core_web_lg")
-    nlp.add_pipe("heads_extraction", config={"force": True})
-
-    doc = nlp("Mette Frederiksen is the Danish politician.")
+    doc = nlp_en("Mette Frederiksen is the Danish politician.")
 
     normalized_token = doc[0]._.to_span  # Token
 
@@ -26,14 +25,12 @@ def test_normalize_to_span():
     assert normalized_token.text == "Mette Frederiksen is the Danish politician."
 
 
-def test_normalize_to_entity():
-
-    nlp = spacy.load("en_core_web_lg")
-    nlp.add_pipe(
+def test_normalize_to_entity(nlp_en):
+    nlp_en.add_pipe(
         "heads_extraction", config={"normalize_to_entity": True, "force": True}
     )
 
-    doc = nlp("Mette Frederiksen is the Danish politician.")
+    doc = nlp_en("Mette Frederiksen is the Danish politician.")
 
     normalized_token = doc[0]._.to_span
 
@@ -42,13 +39,11 @@ def test_normalize_to_entity():
 
 
 def test_normalize_to_noun_chunk():
-
-    nlp = spacy.load("en_core_web_lg")
-    nlp.add_pipe(
+    nlp_en.add_pipe(
         "heads_extraction", config={"normalize_to_noun_chunk": True, "force": True}
     )
 
-    doc = nlp("Mette Frederiksen is the Danish politician.")
+    doc = nlp_en("Mette Frederiksen is the Danish politician.")
 
     noun_chunk = doc[1]._.to_span
 

@@ -1,12 +1,13 @@
-import spacy
+from spacy.tokens import Span
+
+from .utils import nlp_da
+
 from conspiracies.coref import CoreferenceComponent  # noqa
 
 
-def test_coref_component():
-    nlp = spacy.load("da_core_news_sm")
-
+def test_coref_component(nlp_da):
     # test adding pipe works:
-    nlp.add_pipe("allennlp_coref")
+    nlp_da.add_pipe("allennlp_coref")
 
     text = (
         "Aftalepartierne bag Rammeaftalen om plan for genåbning af Danmark blev i"
@@ -20,4 +21,4 @@ def test_coref_component():
     assert isinstance(doc._.coref_chains, list)
     for sent in doc.sents:
         assert isinstance(sent._.coref_chains, list)
-        assert isinstance(sent._.coref_chains[0], spacy.tokens.Span)
+        assert isinstance(sent._.coref_chains[0], Span)
