@@ -28,6 +28,7 @@ A small use case of the coreference component in spaCy.
 
 ```python
 import spacy
+from spacy.tokens import Span
 from conspiracies.coref import CoreferenceComponent 
 
 nlp = spacy.blank("da")
@@ -40,7 +41,7 @@ for sent in doc.sents:
     assert isinstance(sent._.coref_cluster, list)
     assert isinstance(sent._.coref_cluster[0], tuple)
     assert isinstance(sent._.coref_cluster[0][0], int)
-    assert isinstance(sent._.coref_cluster[0][1], spacy.tokens.Span)
+    assert isinstance(sent._.coref_cluster[0][1], Span)
 ```
 
 
