@@ -1,8 +1,6 @@
 import spacy
 from spacy.tokens import Span
-from relationextraction import SpacyRelationExtractor
-from collections import Counter
-from heads_extract_component import HeadwordsExtraction
+import conspiracies  # noqa
 
 
 def test_normalize_to_span():

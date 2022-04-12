@@ -1,8 +1,6 @@
 import spacy
-from spacy.tokens import Doc, Span, Token
-from relationextraction import SpacyRelationExtractor
-from collections import Counter
-from heads_extract_component import HeadwordsExtraction
+from spacy.tokens import Span
+import conspiracies  # noqa
 
 
 def test_head_extractor():
