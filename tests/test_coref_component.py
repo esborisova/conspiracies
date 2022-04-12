@@ -1,6 +1,6 @@
 from spacy.tokens import Span
 
-from .utils import nlp_da
+from .utils import nlp_da  # noqa
 
 from conspiracies.coref import CoreferenceComponent  # noqa
 
@@ -16,9 +16,9 @@ def test_coref_component(nlp_da):
         + "coronaepidemien i Danmark. Ekspertgruppen er nu klar med sin rapport."
     )
 
-    doc = nlp(text)
+    doc = nlp_da(text)
     # test attributes is set a
-    assert isinstance(doc._.coref_chains, list)
+    assert isinstance(doc._.coref_clusters, list)
     for sent in doc.sents:
-        assert isinstance(sent._.coref_chains, list)
-        assert isinstance(sent._.coref_chains[0], Span)
+        assert isinstance(sent._.coref_clusters, list)
+        assert isinstance(sent._.coref_clusters[0][1], Span)
