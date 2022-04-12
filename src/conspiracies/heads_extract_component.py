@@ -13,6 +13,7 @@ from warnings import warn
         "raise_error": False,
         "normalize_to_entity": False,
         "normalize_to_noun_chunk": False,
+        "force": True
     },
 )
 def create_headwords_component(
@@ -21,6 +22,7 @@ def create_headwords_component(
     raise_error: bool,
     normalize_to_entity: bool,
     normalize_to_noun_chunk: bool,
+    force: bool
 ):
     """
     Allows HeadwordsExtraction to be added to a spaCy pipe using nlp.add_pipe("heads_extraction").
@@ -46,6 +48,7 @@ def create_headwords_component(
         raise_error=raise_error,
         normalize_to_entity=normalize_to_entity,
         normalize_to_noun_chunk=normalize_to_noun_chunk,
+        force=force,
     )
 
 
@@ -74,30 +77,28 @@ class HeadwordsExtraction:
         raise_error: bool,
         normalize_to_entity: bool,
         normalize_to_noun_chunk: bool,
+        force: bool = True
     ):
+        """Initialise components"""
 
         self.raise_error = raise_error
         self.normalize_to_entity = normalize_to_entity
         self.normalize_to_noun_chunk = normalize_to_noun_chunk
 
-        """Initialise components"""
-        self.to_span
-        self.most_common_ancestor
+        if not Token.has_extension("to_span") or force:
+            Token.set_extension("to_span", getter=self.to_span, force=force)
+        if not Span.has_extension("to_span") or force:
+            Span.set_extension("to_span", getter=lambda span: span, force=force)
+        if not Doc.has_extension("to_span") or force:
+            Doc.set_extension("to_span", getter=lambda doc: doc[:], force=force)
 
-        if not Token.has_extension("to_span"):
-            Token.set_extension("to_span", getter=self.to_span)
-        if not Span.has_extension("to_span"):
-            Span.set_extension("to_span", getter=lambda span: span)
-        if not Doc.has_extension("to_span"):
-            Doc.set_extension("to_span", getter=lambda doc: doc[:])
-
-        if not Doc.has_extension("most_common_ancestor"):
+        if not Doc.has_extension("most_common_ancestor") or force:
             Doc.set_extension(
                 "most_common_ancestor",
-                getter=lambda doc: self.most_common_ancestor(doc[:]),
+                getter=lambda doc: self.most_common_ancestor(doc[:], force=force),
             )
-        if not Span.has_extension("most_common_ancestor"):
-            Span.set_extension("most_common_ancestor", getter=self.most_common_ancestor)
+        if not Span.has_extension("most_common_ancestor") or force:
+            Span.set_extension("most_common_ancestor", getter=self.most_common_ancestor, force=force)
 
     def __call__(self, doc: Doc):
         """Run the pipeline component"""
