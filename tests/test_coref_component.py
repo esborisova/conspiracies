@@ -19,6 +19,9 @@ def test_coref_component(nlp_da):
     doc = nlp_da(text)
     # test attributes is set a
     assert isinstance(doc._.coref_clusters, list)
+    assert isinstance(doc._.resolve_coref, str)
     for sent in doc.sents:
         assert isinstance(sent._.coref_clusters, list)
+        assert isinstance(sent._.coref_clusters[0], tuple)
+        assert isinstance(sent._.coref_clusters[0][0], int)
         assert isinstance(sent._.coref_clusters[0][1], Span)
