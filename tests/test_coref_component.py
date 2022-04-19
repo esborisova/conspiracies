@@ -19,7 +19,8 @@ def test_coref_clusters(nlp_da_w_coref):
     assert isinstance(doc._.coref_clusters, list)
     for sent in doc.sents:
         assert isinstance(sent._.coref_clusters, list)
-        assert isinstance(sent._.coref_clusters[0][1], Span)
+        if sent._.coref_clusters != []:
+            assert isinstance(sent._.coref_clusters[0][1], Span)
 
 
 def test_resolve_coref(nlp_da_w_coref):
@@ -31,8 +32,7 @@ def test_resolve_coref(nlp_da_w_coref):
     )
 
     resolve_coref_spans = [
-        "Aftalepartierne bag Rammeaftalen om plan for genåbning af Danmark",
-        "blev i foråret 2021 enige om at nedsætte en ekspertgruppe, en ekspertgruppe fik til opgave at komme med input til den langsigtede strategi for håndtering af coronaepidemien i Danmark. ",
+        "Aftalepartierne bag Rammeaftalen om plan for genåbning af Danmark blev i foråret 2021 enige om at nedsætte en ekspertgruppe, en ekspertgruppe fik til opgave at komme med input til den langsigtede strategi for håndtering af coronaepidemien i Danmark. ",
         "en ekspertgruppe er nu klar med en ekspertgruppe rapport.",
     ]
 
