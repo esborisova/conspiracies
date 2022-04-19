@@ -54,7 +54,9 @@ class CoreferenceComponent(TrainablePipe):
 
         # Register custom extension on the Doc and Span
         if not Doc.has_extension("resolve_coref"):
-            Doc.set_extension("resolve_coref", getter=self.resolve_coref)
+            Doc.set_extension("resolve_coref", getter=self.resolve_coref_doc)
+        if not Span.has_extension("resolve_coref"):
+            Span.set_extension("resolve_coref", getter=self.resolve_coref_span)
         if not Doc.has_extension("coref_clusters"):
             Doc.set_extension("coref_clusters", default=[])
         if not Span.has_extension("coref_clusters"):
@@ -62,7 +64,7 @@ class CoreferenceComponent(TrainablePipe):
         if not Span.has_extension("antecedent"):
             Span.set_extension("antecedent", default=None)
 
-    def resolve_coref(self, doc):
+    def resolve_coref_doc(self, doc):
         # Add the resolved coreference doc
         resolved = list(tok.text_with_ws for tok in doc)
         for i, cluster in doc._.coref_clusters:
@@ -73,6 +75,15 @@ class CoreferenceComponent(TrainablePipe):
                     )
                     for i in range(coref.start + 1, coref.end):
                         resolved[i] = ""
+        return "".join(resolved)
+
+    def resolve_coref_span(self, sent):
+        # Add the resolved coreference at the span level
+        resolved = list(tok.text_with_ws for tok in sent)
+        for i, coref in sent._.coref_clusters:
+            if coref != coref._.antecedent:
+                coref_position = resolved.index(f"{coref.text} ")
+                resolved[coref_position] = f"{coref._.antecedent.text} "
         return "".join(resolved)
 
     def set_annotations(self, docs: Iterable[Doc], model_output) -> None:
