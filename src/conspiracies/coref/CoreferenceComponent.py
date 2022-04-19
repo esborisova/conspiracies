@@ -76,15 +76,15 @@ class CoreferenceComponent(TrainablePipe):
                     for i in range(coref.start + 1, coref.end):
                         resolved[i] = ""
         return "".join(resolved)
-
+    
     def resolve_coref_span(self, sent):
         # Add the resolved coreference at the span level
-        resolved = list(tok.text_with_ws for tok in sent)
+        resolved_span = list(tok.text_with_ws for tok in sent)
         for i, coref in sent._.coref_clusters:
             if coref != coref._.antecedent:
-                coref_position = resolved.index(f"{coref.text} ")
-                resolved[coref_position] = f"{coref._.antecedent.text} "
-        return "".join(resolved)
+                coref_position = resolved_span.index(f"{coref.text} ") 
+                resolved_span[coref_position] = f"{coref._.antecedent.text} "
+        return "".join(resolved_span)
 
     def set_annotations(self, docs: Iterable[Doc], model_output) -> None:
         """Set the coref attributes on Doc and Token level
