@@ -15,18 +15,19 @@ def test_coref_component(nlp_da):
         + "komme med input til den langsigtede strategi for håndtering af "
         + "coronaepidemien i Danmark. Ekspertgruppen er nu klar med sin rapport."
     )
-    
+
     resolve_coref_text = (
         "Aftalepartierne bag Rammeaftalen om plan for genåbning af Danmark blev i"
         + " foråret 2021 enige om at nedsætte en ekspertgruppe, en ekspertgruppe fik til opgave at "
         + "komme med input til den langsigtede strategi for håndtering af "
         + "coronaepidemien i Danmark. en ekspertgruppe er nu klar med en ekspertgruppe rapport."
     )
-    
+
     resolve_coref_spans = [
         "Aftalepartierne bag Rammeaftalen om plan for genåbning af Danmark",
         "blev i foråret 2021 enige om at nedsætte en ekspertgruppe, en ekspertgruppe fik til opgave at komme med input til den langsigtede strategi for håndtering af coronaepidemien i Danmark. ",
-        "en ekspertgruppe er nu klar med en ekspertgruppe rapport."]
+        "en ekspertgruppe er nu klar med en ekspertgruppe rapport.",
+    ]
 
     doc = nlp_da(text)
     # test attributes is set a
