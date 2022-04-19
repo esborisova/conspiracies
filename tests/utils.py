@@ -10,3 +10,9 @@ def nlp_en():
 @pytest.fixture()
 def nlp_da():
     return spacy.load("da_core_news_sm")
+
+
+@pytest.fixture()
+def nlp_da_w_coref(nlp_da):
+    nlp_da.add_pipe("allennlp_coref")
+    return nlp_da

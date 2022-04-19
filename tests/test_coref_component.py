@@ -1,13 +1,11 @@
 from spacy.tokens import Span
 
-from .utils import nlp_da  # noqa
+from .utils import nlp_da_w_coref  # noqa
 
 from conspiracies.coref import CoreferenceComponent  # noqa
 
 
-def test_coref_component(nlp_da):
-    # test adding pipe works:
-    nlp_da.add_pipe("allennlp_coref")
+def test_coref_component(nlp_da_w_coref):
 
     text = (
         "Aftalepartierne bag Rammeaftalen om plan for genåbning af Danmark blev i"
@@ -29,7 +27,7 @@ def test_coref_component(nlp_da):
         "en ekspertgruppe er nu klar med en ekspertgruppe rapport.",
     ]
 
-    doc = nlp_da(text)
+    doc = nlp_da_w_coref(text)
     # test attributes is set a
     assert isinstance(doc._.coref_clusters, list)
     assert doc._.resolve_coref == resolve_coref_text
