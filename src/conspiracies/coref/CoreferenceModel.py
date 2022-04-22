@@ -37,13 +37,18 @@ class CoreferenceModel(Predictor):
     """
 
     def __init__(
-        self, model_path: Union[Path, str, None] = None, device: int = -1, 
+        self,
+        model_path: Union[Path, str, None] = None,
+        device: int = -1,
         open_unverified_connection: bool = False,
         **kwargs
     ) -> None:
 
         if model_path is None:
-            model_path = download_model("da_coref_twitter_v1", open_unverified_connection=open_unverified_connection)
+            model_path = download_model(
+                "da_coref_twitter_v1",
+                open_unverified_connection=open_unverified_connection,
+            )
 
         archive = load_archive(model_path, cuda_device=device, **kwargs)
         config = archive.config

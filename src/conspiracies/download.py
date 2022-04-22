@@ -52,7 +52,7 @@ def download_model(
         import ssl
 
         ssl._create_default_https_context = ssl._create_unverified_context
-    
+
     if save_path is None:
         save_path = DEFAULT_CACHE_DIR
 
