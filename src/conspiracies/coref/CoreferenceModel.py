@@ -29,17 +29,21 @@ class CoreferenceModel(Predictor):
             model will be downloaded to the default cache directory.
         device(int, optional): Cuda device. If >= 0 will use the corresponding GPU,
             below 0 is CPU. Defaults to -1.
+        open_unverified_connection (bool, optional): Should you download from an
+            unverified connection. Defaults to False.
 
     Returns:
         CoreferenceModel: The coreference model
     """
 
     def __init__(
-        self, model_path: Union[Path, str, None] = None, device: int = -1, **kwargs
+        self, model_path: Union[Path, str, None] = None, device: int = -1, 
+        open_unverified_connection: bool = False,
+        **kwargs
     ) -> None:
 
         if model_path is None:
-            model_path = download_model("da_coref_twitter_v1")
+            model_path = download_model("da_coref_twitter_v1", open_unverified_connection=open_unverified_connection)
 
         archive = load_archive(model_path, cuda_device=device, **kwargs)
         config = archive.config
