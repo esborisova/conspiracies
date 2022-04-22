@@ -53,12 +53,71 @@ class CoreferenceComponent(TrainablePipe):
         self.model = CoreferenceModel(model_path=model_path, device=device)
 
         # Register custom extension on the Doc and Span
+        if not Doc.has_extension("resolve_coref"):
+            Doc.set_extension("resolve_coref", getter=self.resolve_coref_doc)
+        if not Span.has_extension("resolve_coref"):
+            Span.set_extension("resolve_coref", getter=self.resolve_coref_span)
         if not Doc.has_extension("coref_clusters"):
             Doc.set_extension("coref_clusters", default=[])
         if not Span.has_extension("coref_clusters"):
             Span.set_extension("coref_clusters", default=[])
         if not Span.has_extension("antecedent"):
             Span.set_extension("antecedent", default=None)
+
+    def resolve_coref_doc(self, doc: Doc) -> str:
+        """
+        Resolve the coreference clusters by replacing each entity with the antecedent.
+        The antecedent is the first entity that appears in the cluster. This is for the whole doc.
+
+        Args:
+            doc (Doc): The document.
+
+        Returns:
+            Str: The text of the document with resolved coreference clusters.
+        """
+        resolved = list(tok.text_with_ws for tok in doc)
+        for i, cluster in doc._.coref_clusters:
+            for coref in cluster:
+                if coref != coref._.antecedent:
+                    resolved[coref.start] = (
+                        coref._.antecedent.text + doc[coref.end - 1].whitespace_
+                    )
+                    for i in range(coref.start + 1, coref.end):
+                        resolved[i] = ""
+        return "".join(resolved)
+
+    def resolve_coref_span(self, sent: Span) -> str:
+        """
+        Resolve the coreference clusters by replacing each entity with the antecedent.
+        The antecedent is the first entity that appears in the cluster. This is for the the sent.
+
+        Args:
+            sent (Span): The document.
+
+        Returns:
+            Str: The text of the sentence with resolved coreference clusters.
+        """
+        resolved_span = list(tok.text_with_ws for tok in sent)
+
+        # Calibrate coref index since it is based on the Doc level
+        sentence_lengths = [len(sent) for sent in sent.doc.sents]
+        index_calibrate = 0
+        for i, doc_sent in enumerate(sent.doc.sents):
+            if doc_sent == sent:
+                break
+            else:
+                index_calibrate += sentence_lengths[i]
+
+        for i, coref in sent._.coref_clusters:
+            coref_start = coref.start - index_calibrate
+            coref_end = coref.end - index_calibrate
+            if coref != coref._.antecedent:
+                resolved_span[coref_start] = (
+                    coref._.antecedent.text + sent.doc[coref_end].whitespace_
+                )
+                for i in range(coref_start + 1, coref_end):
+                    resolved_span[i] = ""
+        return "".join(resolved_span).strip()
 
     def set_annotations(self, docs: Iterable[Doc], model_output) -> None:
         """Set the coref attributes on Doc and Token level
@@ -93,7 +152,7 @@ class CoreferenceComponent(TrainablePipe):
         is called on a text and all components are applied to the Doc.
 
         Args:
-            docs (Doc): The Doc to process.
+            doc (Doc): The Doc to process.
 
         Returns:
             Doc: The processed Doc.
