@@ -19,10 +19,15 @@ from conspiracies.coref import CoreferenceModel
     default_config={
         "model_path": None,
         "device": -1,
+        "open_unverified_connection": True,
     },
 )
 def create_coref_component(
-    nlp: Language, name: str, model_path: Union[Path, str, None], device: int
+    nlp: Language,
+    name: str,
+    model_path: Union[Path, str, None],
+    device: int,
+    open_unverified_connection: bool,
 ):
     """Creates coference model component
 
@@ -33,24 +38,39 @@ def create_coref_component(
             model will be downloaded to the default cache directory.
         device (int, optional): Cuda device. If >= 0 will use the corresponding GPU,
             below 0 is CPU. Defaults to -1.
+        open_unverified_connection (bool, optional): Should you download the model from
+            an unverified connection. Defaults to True.
 
     Returns:
         CorefenceComponent: The coreference model component
     """
 
     return CoreferenceComponent(
-        nlp.vocab, name=name, model_path=model_path, device=device
+        nlp.vocab,
+        name=name,
+        model_path=model_path,
+        device=device,
+        open_unverified_connection=open_unverified_connection,
     )
 
 
 class CoreferenceComponent(TrainablePipe):
     def __init__(
-        self, vocab: Vocab, name: str, model_path: Union[Path, str, None], device: int
+        self,
+        vocab: Vocab,
+        name: str,
+        model_path: Union[Path, str, None],
+        device: int,
+        open_unverified_connection: bool,
     ):
 
         self.name = name
         self.vocab = vocab
-        self.model = CoreferenceModel(model_path=model_path, device=device)
+        self.model = CoreferenceModel(
+            model_path=model_path,
+            device=device,
+            open_unverified_connection=open_unverified_connection,
+        )
 
         # Register custom extension on the Doc and Span
         if not Doc.has_extension("resolve_coref"):
