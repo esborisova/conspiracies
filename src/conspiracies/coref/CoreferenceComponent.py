@@ -78,9 +78,9 @@ class CoreferenceComponent(TrainablePipe):
         if not Span.has_extension("resolve_coref"):
             Span.set_extension("resolve_coref", getter=self.resolve_coref_span)
         if not Doc.has_extension("coref_clusters"):
-            Doc.set_extension("coref_clusters", default=[])
+            Doc.set_extension("coref_clusters", default=list())
         if not Span.has_extension("coref_clusters"):
-            Span.set_extension("coref_clusters", default=[])
+            Span.set_extension("coref_clusters", default=list())
         if not Span.has_extension("antecedent"):
             Span.set_extension("antecedent", default=None)
 
