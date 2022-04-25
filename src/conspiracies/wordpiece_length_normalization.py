@@ -33,7 +33,6 @@ def wordpiece_length_normalization(
         >>> list(norm_text)  # short texts should result in the same output
         ["hello there"]
     """
-    docs = nlp.pipe(texts)
 
     def __wordpiece_length(text: str):
         wp_tokens = huggingface_tokenize(tokenizer, [text])
@@ -60,6 +59,7 @@ def wordpiece_length_normalization(
             yield doc[min_span : sent.end].text
         min_span = sent.end + 1
 
+    docs = nlp.pipe(texts)
     for doc in docs:
         doc_wp_length = __wordpiece_length(doc.text)
 
@@ -67,13 +67,11 @@ def wordpiece_length_normalization(
             yield doc.text
         else:  # if doc needs to be split
             min_span = 0
-            n_wordpeices = 0
 
             for sent in doc.sents:
                 span_wp_length = __wordpiece_length(doc[min_span : sent.end].text)
-                n_wordpeices += span_wp_length
 
-                if n_wordpeices > max_length:
+                if span_wp_length > max_length:
                     if min_span == sent.start:
                         # if the sentence is too long split it to longest possible
                         # substring respecting token bounderies.
@@ -83,6 +81,6 @@ def wordpiece_length_normalization(
                     else:
                         yield doc[min_span : sent.start].text
                         min_span = sent.start
-                    n_wordpeices = 0
+
             if min_span < sent.end:
                 yield doc[min_span : sent.end].text  # yield remaining sentence
