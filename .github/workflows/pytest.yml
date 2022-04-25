@@ -58,7 +58,7 @@ jobs:
       uses: MishaKav/pytest-coverage-comment@v1.1.26
       with:
         pytest-coverage-path: ./pytest-coverage.txt
-        github-token: ${{ secrets.PYTEST_COVERAGE }}
+        github-token: ${{ secrets.DOCUMENTATION }}
 
     - name: Check the output coverage
       if: ${{ github.event_name == 'push' }}
