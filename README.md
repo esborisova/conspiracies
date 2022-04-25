@@ -120,6 +120,7 @@ tokenizer_name = "DaNLP/da-bert-tone-subjective-objective"
 tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
 
 # An example with a very long text
+from conspiracies import wordpiece_length_normalization
 long_text = ["Hej mit navn er Kenneth. " * 200]
 normalized_text = wordpiece_length_normalization(long_text, nlp, tokenizer, max_length=500)
 assert len(norm_text) > 1, "a long text should be split into multiple texts"
