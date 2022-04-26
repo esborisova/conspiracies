@@ -105,11 +105,33 @@ for sent in doc:
     sent._.most_common_ancestor  # extract the most common ancestor i.e. span head
 ```
 
+### Wordpiece length normalization Extraction
+A small use case of how to use word piece length normalization to normalize the length of
+your texts in case you are applying transformer-based pipelines.
+
+```python
+import spacy
+from transformers import AutoTokenizer
+
+# load nlp (we don't recommend a trf based spacy model as it is too slow)
+nlp = spacy.load("da_core_news_lg")
+# load huggingface tokenizer - should be the same as the model you wish to apply later
+tokenizer_name = "DaNLP/da-bert-tone-subjective-objective"
+tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
+
+# An example with a very long text
+from conspiracies import wordpiece_length_normalization
+long_text = ["Hej mit navn er Kenneth. " * 200]
+normalized_text = wordpiece_length_normalization(long_text, nlp, tokenizer, max_length=500)
+assert len(norm_text) > 1, "a long text should be split into multiple texts"
+```
+
+
 
 ## FAQ
 
 ### How do I run the tests?
-To run the test, you will need to install the package in editable model. This is
+To run the test, you will need to install the package in editable mode. This is
 intentional as it ensures that you always run the package installation before running
 the tests, which ensures that the installation process works as intended.
 
