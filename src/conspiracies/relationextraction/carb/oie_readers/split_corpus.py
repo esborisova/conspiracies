@@ -14,7 +14,8 @@ from reVerbReader import ReVerbReader
 from stanfordReader import StanfordReader
 from docopt import docopt
 import logging
-logging.basicConfig(level = logging.INFO)
+
+logging.basicConfig(level=logging.INFO)
 
 available_readers = {
     "clausie": ClausieReader,
@@ -22,7 +23,7 @@ available_readers = {
     "openie4": OpenieFourReader,
     "props": PropSReader,
     "reverb": ReVerbReader,
-    "stanford": StanfordReader
+    "stanford": StanfordReader,
 }
 
 
@@ -33,5 +34,4 @@ if __name__ == "__main__":
     corpus = args["--corpus"]
     reader = available_readers[args["--reader"]]()
     reader.read(inp)
-    reader.split_to_corpus(corpus,
-                           out)
+    reader.split_to_corpus(corpus, out)

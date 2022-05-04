@@ -31,17 +31,15 @@ class ArgModule(nn.Module):
         output = encoded
         for layer_idx in range(self.n_layers):
             output = self.layers[layer_idx](
-                target=output, source=predicate, key_mask=pred_mask)
+                target=output, source=predicate, key_mask=pred_mask
+            )
         return output
 
 
 class ArgExtractorLayer(nn.Module):
-    def __init__(self,
-                 d_model=768,
-                 n_heads=8,
-                 d_feedforward=2048,
-                 dropout=0.1,
-                 activation='relu'):
+    def __init__(
+        self, d_model=768, n_heads=8, d_feedforward=2048, dropout=0.1, activation="relu"
+    ):
         """
         A layer similar to Transformer decoder without decoder self-attention.
         (only encoder-decoder multi-head attention followed by feed-forward layers)
@@ -74,8 +72,8 @@ class ArgExtractorLayer(nn.Module):
         """
         # Multi-head attention layer (+ add & norm)
         attended = self.multihead_attn(
-            target, source, source,
-            key_padding_mask=key_mask)[0]
+            target, source, source, key_padding_mask=key_mask
+        )[0]
         skipped = target + self.dropout1(attended)
         normed = self.norm1(skipped)
 
@@ -87,44 +85,45 @@ class ArgExtractorLayer(nn.Module):
 
 
 class Multi2OIE(nn.Module):
-    def __init__(self,
-                 bert_config='bert-base-cased',
-                 mh_dropout=0.1,
-                 pred_clf_dropout=0.,
-                 arg_clf_dropout=0.3,
-                 n_arg_heads=8,
-                 n_arg_layers=4,
-                 pos_emb_dim=64,
-                 pred_n_labels=3,
-                 arg_n_labels=9):
+    def __init__(
+        self,
+        bert_config="bert-base-cased",
+        mh_dropout=0.1,
+        pred_clf_dropout=0.0,
+        arg_clf_dropout=0.3,
+        n_arg_heads=8,
+        n_arg_layers=4,
+        pos_emb_dim=64,
+        pred_n_labels=3,
+        arg_n_labels=9,
+    ):
         super(Multi2OIE, self).__init__()
         self.pred_n_labels = pred_n_labels
         self.arg_n_labels = arg_n_labels
 
-        self.bert = BertModel.from_pretrained(
-            bert_config,
-            output_hidden_states=True)
+        self.bert = BertModel.from_pretrained(bert_config, output_hidden_states=True)
         d_model = self.bert.config.hidden_size
         self.pred_dropout = nn.Dropout(pred_clf_dropout)
         self.pred_classifier = nn.Linear(d_model, self.pred_n_labels)
 
         self.position_emb = nn.Embedding(3, pos_emb_dim, padding_idx=0)
-        d_model += (d_model + pos_emb_dim)
+        d_model += d_model + pos_emb_dim
         arg_layer = ArgExtractorLayer(
-            d_model=d_model,
-            n_heads=n_arg_heads,
-            dropout=mh_dropout)
+            d_model=d_model, n_heads=n_arg_heads, dropout=mh_dropout
+        )
         self.arg_module = ArgModule(arg_layer, n_arg_layers)
         self.arg_dropout = nn.Dropout(arg_clf_dropout)
         self.arg_classifier = nn.Linear(d_model, arg_n_labels)
 
-    def forward(self,
-                input_ids,
-                attention_mask,
-                predicate_mask=None,
-                predicate_hidden=None,
-                total_pred_labels=None,
-                arg_labels=None):
+    def forward(
+        self,
+        input_ids,
+        attention_mask,
+        predicate_mask=None,
+        predicate_hidden=None,
+        total_pred_labels=None,
+        arg_labels=None,
+    ):
 
         # predicate extraction
         bert_hidden = self.bert(input_ids, attention_mask)[0]
@@ -136,13 +135,17 @@ class Multi2OIE(nn.Module):
             active_loss = attention_mask.view(-1) == 1
             active_logits = pred_logit.view(-1, self.pred_n_labels)
             active_labels = torch.where(
-                active_loss, total_pred_labels.view(-1),
-                torch.tensor(loss_fct.ignore_index).type_as(total_pred_labels))
+                active_loss,
+                total_pred_labels.view(-1),
+                torch.tensor(loss_fct.ignore_index).type_as(total_pred_labels),
+            )
             pred_loss = loss_fct(active_logits, active_labels)
 
         # inputs for argument extraction
         pred_feature = _get_pred_feature(bert_hidden, predicate_mask)
-        position_vectors = self.position_emb(_get_position_idxs(predicate_mask, input_ids))
+        position_vectors = self.position_emb(
+            _get_position_idxs(predicate_mask, input_ids)
+        )
         bert_hidden = torch.cat([bert_hidden, pred_feature, position_vectors], dim=2)
         bert_hidden = bert_hidden.transpose(0, 1)
 
@@ -157,8 +160,10 @@ class Multi2OIE(nn.Module):
             active_loss = attention_mask.view(-1) == 1
             active_logits = arg_logit.view(-1, self.arg_n_labels)
             active_labels = torch.where(
-                active_loss, arg_labels.view(-1),
-                torch.tensor(loss_fct.ignore_index).type_as(arg_labels))
+                active_loss,
+                arg_labels.view(-1),
+                torch.tensor(loss_fct.ignore_index).type_as(arg_labels),
+            )
             arg_loss = loss_fct(active_logits, active_labels)
 
         # total loss
@@ -166,19 +171,16 @@ class Multi2OIE(nn.Module):
         outputs = (batch_loss, pred_loss, arg_loss)
         return outputs
 
-    def extract_predicate(self,
-                          input_ids,
-                          attention_mask):
+    def extract_predicate(self, input_ids, attention_mask):
         bert_hidden = self.bert(input_ids, attention_mask)[0]
         pred_logit = self.pred_classifier(bert_hidden)
         return pred_logit, bert_hidden
 
-    def extract_argument(self,
-                         input_ids,
-                         predicate_hidden,
-                         predicate_mask):
+    def extract_argument(self, input_ids, predicate_hidden, predicate_mask):
         pred_feature = _get_pred_feature(predicate_hidden, predicate_mask)
-        position_vectors = self.position_emb(_get_position_idxs(predicate_mask, input_ids))
+        position_vectors = self.position_emb(
+            _get_position_idxs(predicate_mask, input_ids)
+        )
         arg_input = torch.cat([predicate_hidden, pred_feature, position_vectors], dim=2)
         arg_input = arg_input.transpose(0, 1)
         arg_hidden = self.arg_module(arg_input, arg_input, predicate_mask)
@@ -187,21 +189,21 @@ class Multi2OIE(nn.Module):
 
 
 class BERTBiLSTM(nn.Module):
-    def __init__(self,
-                 bert_config='bert-base-cased',
-                 lstm_dropout=0.3,
-                 pred_clf_dropout=0.,
-                 arg_clf_dropout=0.3,
-                 pos_emb_dim=256,
-                 pred_n_labels=3,
-                 arg_n_labels=9):
+    def __init__(
+        self,
+        bert_config="bert-base-cased",
+        lstm_dropout=0.3,
+        pred_clf_dropout=0.0,
+        arg_clf_dropout=0.3,
+        pos_emb_dim=256,
+        pred_n_labels=3,
+        arg_n_labels=9,
+    ):
         super(BERTBiLSTM, self).__init__()
         self.pred_n_labels = pred_n_labels
         self.arg_n_labels = arg_n_labels
 
-        self.bert = BertModel.from_pretrained(
-            bert_config,
-            output_hidden_states=True)
+        self.bert = BertModel.from_pretrained(bert_config, output_hidden_states=True)
         d_model = self.bert.config.hidden_size
         self.pred_dropout = nn.Dropout(pred_clf_dropout)
         self.pred_classifier = nn.Linear(d_model, self.pred_n_labels)
@@ -214,17 +216,20 @@ class BERTBiLSTM(nn.Module):
             num_layers=3,
             dropout=lstm_dropout,
             batch_first=True,
-            bidirectional=True)
+            bidirectional=True,
+        )
         self.arg_dropout = nn.Dropout(arg_clf_dropout)
         self.arg_classifier = nn.Linear(d_model * 2, arg_n_labels)
 
-    def forward(self,
-                input_ids,
-                attention_mask,
-                predicate_mask=None,
-                predicate_hidden=None,
-                total_pred_labels=None,
-                arg_labels=None):
+    def forward(
+        self,
+        input_ids,
+        attention_mask,
+        predicate_mask=None,
+        predicate_hidden=None,
+        total_pred_labels=None,
+        arg_labels=None,
+    ):
 
         # predicate extraction
         bert_hidden = self.bert(input_ids, attention_mask)[0]
@@ -236,12 +241,16 @@ class BERTBiLSTM(nn.Module):
             active_loss = attention_mask.view(-1) == 1
             active_logits = pred_logit.view(-1, self.pred_n_labels)
             active_labels = torch.where(
-                active_loss, total_pred_labels.view(-1),
-                torch.tensor(loss_fct.ignore_index).type_as(total_pred_labels))
+                active_loss,
+                total_pred_labels.view(-1),
+                torch.tensor(loss_fct.ignore_index).type_as(total_pred_labels),
+            )
             pred_loss = loss_fct(active_logits, active_labels)
 
         # argument extraction
-        position_vectors = self.position_emb(_get_position_idxs(predicate_mask, input_ids))
+        position_vectors = self.position_emb(
+            _get_position_idxs(predicate_mask, input_ids)
+        )
         bert_hidden = torch.cat([bert_hidden, position_vectors], dim=2)
         arg_hidden = self.arg_module(bert_hidden)[0]
         arg_logit = self.arg_classifier(self.arg_dropout(arg_hidden))
@@ -252,8 +261,10 @@ class BERTBiLSTM(nn.Module):
             active_loss = attention_mask.view(-1) == 1
             active_logits = arg_logit.view(-1, self.arg_n_labels)
             active_labels = torch.where(
-                active_loss, arg_labels.view(-1),
-                torch.tensor(loss_fct.ignore_index).type_as(arg_labels))
+                active_loss,
+                arg_labels.view(-1),
+                torch.tensor(loss_fct.ignore_index).type_as(arg_labels),
+            )
             arg_loss = loss_fct(active_logits, active_labels)
 
         # total loss
@@ -261,18 +272,15 @@ class BERTBiLSTM(nn.Module):
         outputs = (batch_loss, pred_loss, arg_loss)
         return outputs
 
-    def extract_predicate(self,
-                          input_ids,
-                          attention_mask):
+    def extract_predicate(self, input_ids, attention_mask):
         bert_hidden = self.bert(input_ids, attention_mask)[0]
         pred_logit = self.pred_classifier(bert_hidden)
         return pred_logit, bert_hidden
 
-    def extract_argument(self,
-                         input_ids,
-                         predicate_hidden,
-                         predicate_mask):
-        position_vectors = self.position_emb(_get_position_idxs(predicate_mask, input_ids))
+    def extract_argument(self, input_ids, predicate_hidden, predicate_mask):
+        position_vectors = self.position_emb(
+            _get_position_idxs(predicate_mask, input_ids)
+        )
         arg_input = torch.cat([predicate_hidden, position_vectors], dim=2)
         arg_hidden = self.arg_module(arg_input)[0]
         return self.arg_classifier(arg_hidden)
@@ -298,7 +306,7 @@ def _get_position_idxs(pred_mask, input_ids):
         cur_nonzero = (cur_mask == 0).nonzero()
         start = torch.min(cur_nonzero).item()
         end = torch.max(cur_nonzero).item()
-        position_idxs[mask_idx, start:end + 1] = 1
+        position_idxs[mask_idx, start : end + 1] = 1
         pad_start = max(input_ids[mask_idx].nonzero()).item() + 1
         position_idxs[mask_idx, pad_start:] = 0
     return position_idxs
@@ -313,4 +321,3 @@ def _get_pred_feature(pred_hidden, pred_mask):
         pred_feature = torch.cat(L * [pred_feature.unsqueeze(0)])
         pred_features[mask_idx, :, :] = pred_feature
     return pred_features
-

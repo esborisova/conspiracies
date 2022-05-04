@@ -376,9 +376,7 @@ def extract_to_dict(args, model, loader):
                 out["wordpieces"].append(token_str)
                 out["confidence"].append(cur_confidences)
                 out["extraction_span"].append(
-                    [
-                        _flip_pos(cur_idx[:3]) 
-                        for cur_idx in cur_extraction_idxs]
+                    [_flip_pos(cur_idx[:3]) for cur_idx in cur_extraction_idxs]
                 )
                 out["extraction"].append(
                     [

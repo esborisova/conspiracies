@@ -2,15 +2,17 @@ import torch
 import numpy as np
 from . import utils
 
-pred_tag2idx = {
-    'P-B': 0, 'P-I': 1, 'O': 2
-}
+pred_tag2idx = {"P-B": 0, "P-I": 1, "O": 2}
 arg_tag2idx = {
-    'A0-B': 0, 'A0-I': 1,
-    'A1-B': 2, 'A1-I': 3,
-    'A2-B': 4, 'A2-I': 5,
-    'A3-B': 6, 'A3-I': 7,
-    'O': 8,
+    "A0-B": 0,
+    "A0-I": 1,
+    "A1-B": 2,
+    "A1-I": 3,
+    "A2-B": 4,
+    "A2-I": 5,
+    "A3-B": 6,
+    "A3-I": 7,
+    "O": 8,
 }
 
 
@@ -31,8 +33,8 @@ def get_pred_mask(tensor):
     :return: masked binary tensor with the same shape.
     """
     res = tensor.clone()
-    res[tensor == pred_tag2idx['O']] = 1
-    res[tensor != pred_tag2idx['O']] = 0
+    res[tensor == pred_tag2idx["O"]] = 1
+    res[tensor != pred_tag2idx["O"]] = 0
     return torch.tensor(res, dtype=torch.bool, device=tensor.device)
 
 
@@ -52,8 +54,8 @@ def filter_pred_tags(pred_tags, tokens):
     # filter by tokens ([CLS], [SEP], [PAD] tokens should be allocated as 'O')
     for pred_idx, cur_tokens in enumerate(tokens):
         for tag_idx, token in enumerate(cur_tokens):
-            if token in ['[CLS]', '[SEP]', '[PAD]']:
-                pred_tags[pred_idx][tag_idx] = pred_tag2idx['O']
+            if token in ["[CLS]", "[SEP]", "[PAD]"]:
+                pred_tags[pred_idx][tag_idx] = pred_tag2idx["O"]
 
     # filter by tags
     pred_copied = pred_tags.clone()
@@ -61,12 +63,12 @@ def filter_pred_tags(pred_tags, tokens):
         flag = False
         tag_copied = cur_pred_tag.clone()
         for tag_idx, tag in enumerate(tag_copied):
-            if not flag and tag == pred_tag2idx['P-B']:
+            if not flag and tag == pred_tag2idx["P-B"]:
                 flag = True
-            elif not flag and tag == pred_tag2idx['P-I']:
-                pred_tags[pred_idx][tag_idx] = pred_tag2idx['P-B']
+            elif not flag and tag == pred_tag2idx["P-I"]:
+                pred_tags[pred_idx][tag_idx] = pred_tag2idx["P-B"]
                 flag = True
-            elif flag and tag == pred_tag2idx['O']:
+            elif flag and tag == pred_tag2idx["O"]:
                 flag = False
     return pred_tags
 
@@ -86,30 +88,31 @@ def filter_arg_tags(arg_tags, pred_tags, tokens):
     # filter by tokens ([CLS], [SEP], [PAD] tokens should be allocated as 'O')
     for arg_idx, cur_arg_tag in enumerate(arg_tags):
         for tag_idx, token in enumerate(tokens):
-            if token in ['[CLS]', '[SEP]', '[PAD]']:
-                arg_tags[arg_idx][tag_idx] = arg_tag2idx['O']
+            if token in ["[CLS]", "[SEP]", "[PAD]"]:
+                arg_tags[arg_idx][tag_idx] = arg_tag2idx["O"]
 
     # filter by tags
     arg_copied = arg_tags.clone()
     for arg_idx, (cur_arg_tag, cur_pred_tag) in enumerate(zip(arg_copied, pred_tags)):
-        pred_idxs = [idx[0].item() for idx
-                     in (cur_pred_tag != pred_tag2idx['O']).nonzero()]
-        arg_tags[arg_idx][pred_idxs] = arg_tag2idx['O']
+        pred_idxs = [
+            idx[0].item() for idx in (cur_pred_tag != pred_tag2idx["O"]).nonzero()
+        ]
+        arg_tags[arg_idx][pred_idxs] = arg_tag2idx["O"]
         cur_arg_copied = arg_tags[arg_idx].clone()
         flag_idx = 999
         for tag_idx, tag in enumerate(cur_arg_copied):
-            if tag == arg_tag2idx['O']:
+            if tag == arg_tag2idx["O"]:
                 flag_idx = 999
                 continue
-            arg_n = torch.div(tag, 2, rounding_mode='floor')  # 0: A0 / 1: A1 / ...
+            arg_n = torch.div(tag, 2, rounding_mode="floor")  # 0: A0 / 1: A1 / ...
             inside = tag % 2  # 0: begin / 1: inside
             if not inside and flag_idx != arg_n:
                 flag_idx = arg_n
             # connect_args
             elif not inside and flag_idx == arg_n:
-                arg_tags[arg_idx][tag_idx] = arg_tag2idx[f'A{arg_n}-I']
+                arg_tags[arg_idx][tag_idx] = arg_tag2idx[f"A{arg_n}-I"]
             elif inside and flag_idx != arg_n:
-                arg_tags[arg_idx][tag_idx] = arg_tag2idx[f'A{arg_n}-B']
+                arg_tags[arg_idx][tag_idx] = arg_tag2idx[f"A{arg_n}-B"]
                 flag_idx = arg_n
     return arg_tags
 
@@ -156,9 +159,12 @@ def get_max_prob_args(arg_tags, arg_probs):
                     max_idxs = idxs
             if max_idxs is None:
                 continue
-            del_idxs = [idx for idx, tag in enumerate(cur_arg_tag)
-                        if (tag in [b_tag, i_tag]) and (idx not in max_idxs)]
-            cur_arg_tag[del_idxs] = arg_tag2idx['O']
+            del_idxs = [
+                idx
+                for idx, tag in enumerate(cur_arg_tag)
+                if (tag in [b_tag, i_tag]) and (idx not in max_idxs)
+            ]
+            cur_arg_tag[del_idxs] = arg_tag2idx["O"]
     return arg_tags
 
 
@@ -185,19 +191,21 @@ def get_single_predicate_idxs(pred_tags):
     total_pred_tags = []
     for cur_pred_tag in pred_tags:
         cur_sent_preds = []
-        begin_idxs = [idx[0].item() for idx in (cur_pred_tag == pred_tag2idx['P-B']).nonzero()]
+        begin_idxs = [
+            idx[0].item() for idx in (cur_pred_tag == pred_tag2idx["P-B"]).nonzero()
+        ]
         for i, b_idx in enumerate(begin_idxs):
-            cur_pred = np.full(cur_pred_tag.shape[0], pred_tag2idx['O'])
-            cur_pred[b_idx] = pred_tag2idx['P-B']
+            cur_pred = np.full(cur_pred_tag.shape[0], pred_tag2idx["O"])
+            cur_pred[b_idx] = pred_tag2idx["P-B"]
             if i == len(begin_idxs) - 1:
                 end_idx = cur_pred_tag.shape[0]
             else:
                 end_idx = begin_idxs[i + 1]
             for j, tag in enumerate(cur_pred_tag[b_idx:end_idx]):
-                if tag.item() == pred_tag2idx['O']:
+                if tag.item() == pred_tag2idx["O"]:
                     break
-                elif tag.item() == pred_tag2idx['P-I']:
-                    cur_pred[b_idx + j] = pred_tag2idx['P-I']
+                elif tag.item() == pred_tag2idx["P-I"]:
+                    cur_pred[b_idx + j] = pred_tag2idx["P-I"]
             cur_sent_preds.append(cur_pred)
         total_pred_tags.append(cur_sent_preds)
     return [torch.Tensor(pred_tags) for pred_tags in total_pred_tags]
@@ -216,7 +224,7 @@ def get_tuple(sentence, pred_tags, arg_tags, tokenizer):
     :return extraction_idxs: list of indexes of each argument for calculating confidence score.
     """
     word2piece = utils.get_word2piece(sentence, tokenizer)
-    words = sentence.split(' ')
+    words = sentence.split(" ")
     assert pred_tags.shape[0] == arg_tags.shape[0]  # number of predicates
 
     pred_tags = pred_tags.tolist()
@@ -230,39 +238,43 @@ def get_tuple(sentence, pred_tags, arg_tags, tokenizer):
         cur_extraction_idxs = list()
 
         # get predicate
-        pred_labels = [pred_tag2idx['P-B'], pred_tag2idx['P-I']]
-        cur_predicate_idxs = [idx for idx, tag in enumerate(cur_pred_tag) if tag in pred_labels]
+        pred_labels = [pred_tag2idx["P-B"], pred_tag2idx["P-I"]]
+        cur_predicate_idxs = [
+            idx for idx, tag in enumerate(cur_pred_tag) if tag in pred_labels
+        ]
         if len(cur_predicate_idxs) == 0:
-            predicates_str = ''
+            predicates_str = ""
         else:
             cur_pred_words = list()
             for word_idx, piece_idxs in word2piece.items():
                 if set(piece_idxs) <= set(cur_predicate_idxs):
                     cur_pred_words.append(word_idx)
             if len(cur_pred_words) == 0:
-                predicates_str = ''
+                predicates_str = ""
                 cur_predicate_idxs = list()
             else:
-                predicates_str = ' '.join([words[idx] for idx in cur_pred_words])
+                predicates_str = " ".join([words[idx] for idx in cur_pred_words])
         cur_extraction.append(predicates_str)
         cur_extraction_idxs.append(cur_predicate_idxs)
 
         # get arguments
         for arg_n in range(4):
-            cur_arg_labels = [arg_tag2idx[f'A{arg_n}-B'], arg_tag2idx[f'A{arg_n}-I']]
-            cur_arg_idxs = [idx for idx, tag in enumerate(cur_arg_tags) if tag in cur_arg_labels]
+            cur_arg_labels = [arg_tag2idx[f"A{arg_n}-B"], arg_tag2idx[f"A{arg_n}-I"]]
+            cur_arg_idxs = [
+                idx for idx, tag in enumerate(cur_arg_tags) if tag in cur_arg_labels
+            ]
             if len(cur_arg_idxs) == 0:
-                cur_arg_str = ''
+                cur_arg_str = ""
             else:
                 cur_arg_words = list()
                 for word_idx, piece_idxs in word2piece.items():
                     if set(piece_idxs) <= set(cur_arg_idxs):
                         cur_arg_words.append(word_idx)
                 if len(cur_arg_words) == 0:
-                    cur_arg_str = ''
+                    cur_arg_str = ""
                     cur_arg_idxs = list()
                 else:
-                    cur_arg_str = ' '.join([words[idx] for idx in cur_arg_words])
+                    cur_arg_str = " ".join([words[idx] for idx in cur_arg_words])
             cur_extraction.append(cur_arg_str)
             cur_extraction_idxs.append(cur_arg_idxs)
         extractions.append(cur_extraction)
@@ -294,7 +306,9 @@ def get_confidence_score(pred_probs, arg_probs, extraction_idxs):
             if len(arg_idx) == 0:
                 continue
             begin_idxs = _find_begins(arg_idx)
-            arg_score = np.mean([max(cur_arg_prob[cur_idx]).item() for cur_idx in begin_idxs])
+            arg_score = np.mean(
+                [max(cur_arg_prob[cur_idx]).item() for cur_idx in begin_idxs]
+            )
             cur_score += arg_score
         confidence_scores.append(cur_score)
     return confidence_scores

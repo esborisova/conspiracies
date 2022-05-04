@@ -7,7 +7,6 @@ from .other import utils
 from transformers import BertTokenizer
 
 
-
 def load_data(
     data_path, batch_size, max_len=64, train=True, tokenizer_config="bert-base-cased"
 ):

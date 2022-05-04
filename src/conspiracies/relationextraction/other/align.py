@@ -9,7 +9,6 @@ from spacy.tokens import Span, Token
 from thinc.types import Ragged, Floats2d
 
 
-
 def get_token_positions(spans: List[Span]) -> Dict[Token, int]:
     token_positions: Dict[Token, int] = {}
     for span in spans:
@@ -52,7 +51,7 @@ def get_alignment(
     """Compute a ragged alignment array that records, for each unique token in
     `spans`, the corresponding indices in the flattened `wordpieces` array.
     For instance, imagine you have two overlapping spans:
-    
+
         [[I, like, walking], [walking, outdoors]]
 
     And their wordpieces are:

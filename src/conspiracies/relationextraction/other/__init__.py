@@ -1,5 +1,5 @@
 from ..model import Multi2OIE, BERTBiLSTM
-from .utils import(
+from .utils import (
     set_seed,
     str2bool,
     clean_config,

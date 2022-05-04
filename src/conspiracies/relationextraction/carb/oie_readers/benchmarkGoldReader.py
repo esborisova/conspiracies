@@ -12,12 +12,12 @@ from oie_readers.extraction import Extraction
 from docopt import docopt
 import logging
 
-logging.basicConfig(level = logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
+
 
 class BenchmarkGoldReader(OieReader):
-
     def __init__(self):
-        self.name = 'BenchmarkGoldReader'
+        self.name = "BenchmarkGoldReader"
 
     def read(self, fn):
         """
@@ -31,14 +31,16 @@ class BenchmarkGoldReader(OieReader):
             for line in fin:
                 if not line.strip():
                     continue
-                data = line.strip().split('\t')
+                data = line.strip().split("\t")
                 text, rel = data[:2]
-                curExtraction = Extraction(pred = rel.strip(),
-                                           head_pred_index = None,
-                                           sent = text.strip(),
-                                           confidence = 1.0,
-                                           question_dist = "./question_distributions/dist_wh_sbj_obj1.json",
-                                           index = ex_index)
+                curExtraction = Extraction(
+                    pred=rel.strip(),
+                    head_pred_index=None,
+                    sent=text.strip(),
+                    confidence=1.0,
+                    question_dist="./question_distributions/dist_wh_sbj_obj1.json",
+                    index=ex_index,
+                )
                 ex_index += 1
 
                 for arg in data[2:]:

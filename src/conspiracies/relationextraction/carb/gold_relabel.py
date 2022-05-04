@@ -3,14 +3,15 @@ from carb.extraction import Extraction
 from _collections import defaultdict
 import json
 
+
 class Relabel_GoldReader(OieReader):
-	
-	# Path relative to repo root folder
-    default_filename = './oie_corpus/all.oie' 
-	
+
+    # Path relative to repo root folder
+    default_filename = "./oie_corpus/all.oie"
+
     def __init__(self):
-        self.name = 'Relabel_Gold'
-	
+        self.name = "Relabel_Gold"
+
     def read(self, fn):
         d = defaultdict(lambda: [])
         with open(fn) as fin:
@@ -21,14 +22,16 @@ class Relabel_GoldReader(OieReader):
                 if t["pred"].strip() == "<be>":
                     rel = "[is]"
                 else:
-                    rel = t["pred"].replace("<be> ","")
+                    rel = t["pred"].replace("<be> ", "")
                 confidence = 1
-				
-                curExtraction = Extraction(pred = rel,
-							               head_pred_index = None,
-	                                       sent = sentence,
-	                                       confidence = float(confidence),
-	                                       index = None)
+
+                curExtraction = Extraction(
+                    pred=rel,
+                    head_pred_index=None,
+                    sent=sentence,
+                    confidence=float(confidence),
+                    index=None,
+                )
                 if t["arg0"] != "":
                     curExtraction.addArg(t["arg0"])
                 if t["arg1"] != "":
@@ -41,6 +44,6 @@ class Relabel_GoldReader(OieReader):
                     curExtraction.addArg(t["temp"])
                 if t["loc"] != "":
                     curExtraction.addArg(t["loc"])
-	                
+
                 d[sentence].append(curExtraction)
         self.oie = d
