@@ -147,7 +147,11 @@ class HeadwordsExtractionComponent:
                 if ancestor in span
             ]
         )
-        most_common_ancestor = ancestors_in_span.most_common()[0][0]
+        most_common_ancestors = ancestors_in_span.most_common()
+        if most_common_ancestors:
+            most_common_ancestor = most_common_ancestors[0][0]
+        else:  # fall back is to simply take the first token
+            most_common_ancestor = span[0]
 
         normalized_token = self.to_span(most_common_ancestor)
 
