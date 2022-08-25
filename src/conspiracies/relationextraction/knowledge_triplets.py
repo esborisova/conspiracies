@@ -14,29 +14,22 @@ DEFAULT_MODEL_DIR = Path(Path.home(), ".relation_model")
 
 
 class KnowledgeTriplets:
-
     """A class for extracting triplets from a given text document.
 
-    Typical usage example:
-
-       re = KnowledgeTriplets(model_path = None)
-       extracted_triplets = re.extract_relations(list_of_sent)
-
+    Example:
+    >>> re = KnowledgeTriplets(model_path = None)
+    >>> extracted_triplets = re.extract_relations(list_of_sent)
 
     Args:
         model_path: Path to a model (str, optional).
 
     Attributes:
-
         batch_size: An integer indicating the number of samples that will be propogated through the network.
         max_len: An integer defining the maximum sentence (vector?) length.
         num_workers: An integer which controls the number of worker threads which performe simultaneous training of a model.
         pin_memory: A boolean indicating if the fetched data Tensors should be put in pinned memory.
         bert_config: A string defining the configuration type.
         device: A boolean indicating whether to train a model on GPU or CPU.
-
-
-
     """
 
     def __init__(

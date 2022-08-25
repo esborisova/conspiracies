@@ -130,4 +130,5 @@ dmypy.json
 
 # .vscode
 .vscode/*
+# MacOS
 .DS_Store
