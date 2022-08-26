@@ -1,8 +1,10 @@
-import torch
 import numpy as np
+import torch
 from torch.utils.data import Dataset
-from .other import utils
 from transformers import BertTokenizer
+
+from .other import utils
+
 
 class EvalDataset(Dataset):
     def __init__(

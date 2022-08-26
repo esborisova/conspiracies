@@ -1,5 +1,6 @@
 import pickle
-from ..model import Multi2OIE, BERTBiLSTM
+
+from ..model import BERTBiLSTM, Multi2OIE
 
 
 def get_models(
