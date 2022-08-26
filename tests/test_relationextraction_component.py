@@ -53,6 +53,7 @@ def test_relation_extraction_empty_string(nlp_da):  # noqa
     doc = nlp_da("")
     assert doc._.relation_triplets == []
 
+
 def test_relation_extraction_no_extracted_relation(nlp_da):
     nlp_da.add_pipe("relation_extractor")
     doc = nlp_da("Ingen relation")
