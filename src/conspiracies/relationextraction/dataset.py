@@ -1,4 +1,4 @@
-import numpy as np
+"""Dataset class used for preparing input to relation extraction model"""
 import torch
 from torch.utils.data import Dataset
 from transformers import BertTokenizer
