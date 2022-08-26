@@ -1,9 +1,9 @@
-from .utils import nlp_da
+from .utils import nlp_da  # noqa
 
 from conspiracies.coref.CoreferenceModel import CoreferenceModel
 
 
-def test_CoreferenceModel(nlp_da):
+def test_CoreferenceModel(nlp_da):  # noqa
     model = CoreferenceModel()  # check that the model loads as intended
 
     text = [

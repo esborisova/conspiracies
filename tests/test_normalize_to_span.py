@@ -4,7 +4,7 @@ from spacy.tokens import Span
 import conspiracies  # noqa
 
 
-def test_normalize_to_span(nlp_en):
+def test_normalize_to_span(nlp_en):  # noqa
     nlp_en.add_pipe("heads_extraction", config={"force": True})
 
     doc = nlp_en("Mette Frederiksen is the Danish politician.")
@@ -38,7 +38,7 @@ def test_normalize_to_entity(nlp_en):
     assert normalized_token.text == "Mette Frederiksen"
 
 
-def test_normalize_to_noun_chunk(nlp_en):
+def test_normalize_to_noun_chunk(nlp_en):  # noqa
     nlp_en.add_pipe(
         "heads_extraction", config={"normalize_to_noun_chunk": True, "force": True}
     )
