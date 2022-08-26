@@ -34,7 +34,7 @@ def test_relation_extraction_component_single(nlp_da):
     ]
 
 
-def test_relation_extraction_multi_sentence(nlp_da): # noqa
+def test_relation_extraction_multi_sentence(nlp_da):  # noqa
     nlp_da.add_pipe("relation_extractor")
     doc = nlp_da(
         "Barack Obama is the former president of the United States. Du har to heste der hedder Jens og Frode"
