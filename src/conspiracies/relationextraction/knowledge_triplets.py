@@ -8,31 +8,13 @@ import torch
 from torch.utils.data import DataLoader
 
 from .dataset import EvalDataset
-from .extract import extract_to_dict, extract_to_list
+from .extract import extract_to_dict
 from .other import utils
 
 DEFAULT_MODEL_DIR = Path(Path.home(), ".relation_model")
 
 
 class KnowledgeTriplets:
-    """A class for extracting triplets from a given text document.
-
-    Example:
-    >>> re = KnowledgeTriplets(model_path = None)
-    >>> extracted_triplets = re.extract_relations(list_of_sent)
-
-    Args:
-        model_path: Path to a model (str, optional).
-
-    Attributes:
-        batch_size: An integer indicating the number of samples that will be propogated through the network.
-        max_len: An integer defining the maximum sentence (vector?) length.
-        num_workers: An integer which controls the number of worker threads which performe simultaneous training of a model.
-        pin_memory: A boolean indicating if the fetched data Tensors should be put in pinned memory.
-        bert_config: A string defining the configuration type.
-        device: A boolean indicating whether to train a model on GPU or CPU.
-    """
-
     def __init__(
         self,
         model_path: Optional[str] = None,
@@ -42,7 +24,23 @@ class KnowledgeTriplets:
         pin_memory: bool = True,
         device: Optional[str] = None,
     ):
+        """A class for extracting triplets from a given text document.
 
+        Example:
+        >>> re = KnowledgeTriplets(model_path = None)
+        >>> extracted_triplets = re.extract_relations(list_of_sent)
+
+        Args:
+            model_path: Path to a model (str, optional).
+
+        Attributes:
+            batch_size: An integer indicating the number of samples that will be propogated through the network.
+            max_len: An integer defining the maximum sentence (vector?) length.
+            num_workers: An integer which controls the number of worker threads which performe simultaneous training of a model.
+            pin_memory: A boolean indicating if the fetched data Tensors should be put in pinned memory.
+            bert_config: A string defining the configuration type.
+            device: A boolean indicating whether to train a model on GPU or CPU.
+        """
         self._bert_config = "bert-base-multilingual-cased"
         if not device:
             self._device = torch.device(
