@@ -1,14 +1,15 @@
-from .dataset import EvalDataset
-from .other import utils
-import torch
-import time
-from .extract import extract_to_list, extract_to_dict
-from torch.utils.data import DataLoader
-from typing import Optional, List, Tuple
-import urllib.request
 import os
+import time
+import urllib.request
 from pathlib import Path
+from typing import List, Optional, Tuple
 
+import torch
+from torch.utils.data import DataLoader
+
+from .dataset import EvalDataset
+from .extract import extract_to_dict, extract_to_list
+from .other import utils
 
 DEFAULT_MODEL_DIR = Path(Path.home(), ".relation_model")
 

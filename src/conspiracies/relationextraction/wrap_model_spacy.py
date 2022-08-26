@@ -12,9 +12,9 @@ from transformers import AutoTokenizer
 from .knowledge_triplets import KnowledgeTriplets
 from .util import (
     install_extension,
+    match_extraction_spans_to_wp,
     wp2tokid,
     wp_span_to_token,
-    match_extraction_spans_to_wp,
 )
 
 
@@ -84,12 +84,8 @@ class SpacyRelationExtractor(TrainablePipe):
     def set_annotations(self, doc: Iterable[Doc], predictions: Dict) -> None:
         """Assign the extracted features to the Doc objects. Extractions below the
         confidence threshold are filtered, wordpieces and spacy tokens
-        are aligned and then attributes are set .
+        are aligned and then attributes are set.
 
-
-        Assign the extracted features to the Doc object. Extractions below the
-        confidence threshold are filtered, wordpieces and spacy tokens
-        are aligned and then attributes are set .
         Args:
             docs (Iterable[Doc]): The documents to modify.
             predictions: (Dict): A batch of outputs from KnowledgeTriplets.extract_relations().
@@ -142,8 +138,9 @@ class SpacyRelationExtractor(TrainablePipe):
         RETURNS (Doc): The processed Doc.
         DOCS: https://spacy.io/api/transformer#call
         """
-        outputs = self.predict([doc])
-        self.set_annotations([doc], outputs)
+        sents = [sent.text for sent in doc.sents]
+        outputs = self.predict(sents)
+        self.set_annotations(doc, outputs)
         return doc
 
     def pipe(self, stream: Iterable[Doc], *, batch_size: int = 128) -> Iterator[Doc]:
