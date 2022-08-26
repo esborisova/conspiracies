@@ -5,7 +5,7 @@ from spacy.tokens import Span
 import conspiracies  # noqa
 
 
-def test_most_common_ancestor(nlp_en):
+def test_most_common_ancestor(nlp_en):  # noqa
     nlp_en.add_pipe("heads_extraction")
     doc = nlp_en("Mette Frederiksen is the Danish politician.")
 

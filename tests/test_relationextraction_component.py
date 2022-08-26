@@ -34,7 +34,7 @@ def test_relation_extraction_component_single(nlp_da):
     ]
 
 
-def test_relation_extraction_multi_sentence(nlp_da):
+def test_relation_extraction_multi_sentence(nlp_da): # noqa
     nlp_da.add_pipe("relation_extractor")
     doc = nlp_da(
         "Barack Obama is the former president of the United States. Du har to heste der hedder Jens og Frode"
@@ -48,7 +48,7 @@ def test_relation_extraction_multi_sentence(nlp_da):
     ]
 
 
-def test_relation_extraction_empty_string(nlp_da):
+def test_relation_extraction_empty_string(nlp_da):  # noqa
     nlp_da.add_pipe("relation_extractor")
     doc = nlp_da("")
-    assert doc._.relation_triplets == None
+    assert doc._.relation_triplets is None

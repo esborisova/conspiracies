@@ -1,11 +1,11 @@
 from spacy.tokens import Span
 
-from .utils import nlp_da_w_coref, nlp_da  # noqa
-
 from conspiracies.coref import CoreferenceComponent  # noqa
 
+from .utils import nlp_da, nlp_da_w_coref  # noqa
 
-def test_coref_clusters(nlp_da_w_coref):
+
+def test_coref_clusters(nlp_da_w_coref):  # noqa
 
     text = (
         "Aftalepartierne bag Rammeaftalen om plan for genåbning af Danmark blev i"
