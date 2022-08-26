@@ -90,9 +90,6 @@ class SpacyRelationExtractor(TrainablePipe):
             docs (Iterable[Doc]): The documents to modify.
             predictions: (Dict): A batch of outputs from KnowledgeTriplets.extract_relations().
         """
-        # remove empty docs
-        if not doc:
-            return
         # get nested list of indices above confidence threshold
         filtered_indices = [
             [
@@ -108,6 +105,15 @@ class SpacyRelationExtractor(TrainablePipe):
                 [values[filter_idx] for filter_idx in indices]
                 for indices, values in zip(filtered_indices, predictions[key])
             ]
+
+        # Output empty lists if empty doc or no extractions above threshold
+        if not predictions["extraction"]:
+            setattr(doc._, "relation_triplets", [])
+            setattr(doc._, "relation_confidence", [])
+            setattr(doc._, "relation_head", [])
+            setattr(doc._, "relation_relation", [])
+            setattr(doc._, "relation_tail", [])
+            return
 
         # concatenate wordpieces and concatenate extraction span. Handle new extraction spans by adding the length of the previous
         # Join wordpieces to single list
