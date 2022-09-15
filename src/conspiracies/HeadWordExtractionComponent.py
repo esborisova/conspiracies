@@ -180,6 +180,10 @@ def contains_ents(span: Union[Doc, Span]) -> bool:
     return False
 
 
+def get_entity_label(entity: Span) -> str:
+    return entity.ents[0].label_
+
+
 @Language.factory(
     "heads_extraction",
     default_config={
