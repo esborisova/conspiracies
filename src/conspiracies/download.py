@@ -28,6 +28,7 @@ def download_model(
     save_path: Union[Path, str, None] = None,
     force: bool = False,
     verbose: bool = True,
+    open_unverified_connection: bool = False,
 ) -> str:
     """
     Download a model name from list of models.
@@ -40,10 +41,18 @@ def download_model(
             already exists. Defaults to False.
         verbose(bool, optional): If True, the model will be downloaded and saved
             to the default cache directory. Defaults to True.
+        open_unverified_connection (bool, optional): Should you download from an
+            unverified connection. Defaults to False.
 
     Returns:
         str: Path to the downloaded model.
     """
+
+    if open_unverified_connection:
+        import ssl
+
+        ssl._create_default_https_context = ssl._create_unverified_context
+
     if save_path is None:
         save_path = DEFAULT_CACHE_DIR
 
