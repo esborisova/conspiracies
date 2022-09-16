@@ -11,14 +11,14 @@ df = pd.read_csv("Bridgegate.csv")
 entities = df["rank"].tolist()
 tokens = [word_tokenize(entity) for entity in entities]
 stems = [
-    list(map(lambda token: stemmer.stem(token), list_of_tokens))
+    list(map(stemmer.stem, list_of_tokens))
     for list_of_tokens in tokens
 ]
 joined_stems = [" ".join(stem) for stem in stems]
 df["stems"] = joined_stems
 
 current_list = df.values.tolist()
-sorted_current_list = sorted(current_list, key=itemgetter(2), reverse=True)
+sorted_current_list = sorted(current_list, key=lambda x: x[2], reverse=True)
 
 supernodes = []
 max_seeds = 4

@@ -1,7 +1,7 @@
 import nltk
 from nltk.tokenize import word_tokenize
 from operator import itemgetter
-from typing import List
+from typing import List, Tuple
 
 
 def preprocess_seeds(seeds_list: List[str], stemmer) -> List[str]:
@@ -17,7 +17,7 @@ def preprocess_seeds(seeds_list: List[str], stemmer) -> List[str]:
 
 
 def find_most_freq_substring(
-    list_of_substrings: List[List[str, str, int]]
+    list_of_substrings: List[Tuple[str, str, int]]
 ) -> List[str, str, int]:
 
     sorted_list = sorted(list_of_substrings, key=itemgetter(2), reverse=True)
