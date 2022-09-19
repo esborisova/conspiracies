@@ -31,7 +31,11 @@ while len(heads_and_entities) > 0:
     phrases_w_seed = [
         (phrase, freq)
         for phrase, tag, freq in heads_and_entities
-        if any(stemmer.stem(" ".join(word_tokenize(seed))) in stemmer.stem(" ".join(word_tokenize(phrase))) for seed in seeds)
+        if any(
+            stemmer.stem(" ".join(word_tokenize(seed)))
+            in stemmer.stem(" ".join(word_tokenize(phrase)))
+            for seed in seeds
+        )
     ]
 
     # Step-3: Compute the most frequent entity/concept in the original list (other than
