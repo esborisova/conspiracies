@@ -1,5 +1,6 @@
 import spacy
 
+
 def lemmatize(doc: str, nlp) -> str:
     """
     Lemmatizes a sequence of words.
