@@ -1,3 +1,5 @@
+"""Determining supernodes"""
+
 import spacy
 import pandas as pd
 from conspiracies.supernodes import lemmatize
