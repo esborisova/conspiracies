@@ -42,6 +42,7 @@ for sent in doc.sents:
     assert isinstance(sent._.coref_cluster[0], tuple)
     assert isinstance(sent._.coref_cluster[0][0], int)
     assert isinstance(sent._.coref_cluster[0][1], Span)
+    sent._.resolve_coref # get resolved coref
 ```
 
 
